@@ -1,0 +1,41 @@
+{"id":"det-1","type":"hash","text":"A high number of malicious detections across many antivirus engines strongly indicates a malicious file."}
+{"id":"det-2","type":"hash","text":"A strongly negative reputation score combined with high detections increases confidence in malicious classification."}
+{"id":"det-3","type":"hash","text":"A suspicious executable observed near unusual child processes or network activity may indicate malware execution."}
+
+{"id":"det-4","type":"ip","text":"Repeated outbound connections to the same external IP at regular intervals may indicate beaconing behavior."}
+{"id":"det-5","type":"ip","text":"Connections from multiple internal hosts to the same low-reputation IP in a short period may indicate shared malicious exposure."}
+{"id":"det-6","type":"ip","text":"Rare outbound communication to unfamiliar IP space can indicate suspicious infrastructure use when unsupported by business context."}
+
+{"id":"det-7","type":"domain","text":"A newly observed domain combined with login-related content or brand impersonation is consistent with phishing."}
+{"id":"det-8","type":"domain","text":"A domain appearing in both email telemetry and web access logs may indicate user interaction with malicious content."}
+{"id":"det-9","type":"domain","text":"Low-reputation domains with little business relevance and repeated alert presence should be treated as suspicious patterns."}
+
+{"id":"det-10","type":"url","text":"URLs with multiple redirects, encoded parameters, or unusual paths are commonly associated with phishing or malware delivery."}
+{"id":"det-11","type":"url","text":"User access to a suspicious URL followed by file download or process execution may indicate compromise progression."}
+{"id":"det-12","type":"url","text":"A suspicious URL embedded in email and later accessed by a user may indicate successful phishing engagement."}
+
+{"id":"det-13","type":"email","text":"Messages with suspicious sender patterns, failed authentication signals, and embedded links or attachments align with phishing activity."}
+{"id":"det-14","type":"email","text":"Similar suspicious emails sent to multiple recipients suggest campaign behavior rather than isolated messaging."}
+{"id":"det-15","type":"email","text":"Attachments that lead to script execution or unusual child processes may indicate document-borne malware."}
+
+{"id":"det-16","type":"cve","text":"A critical or high-severity CVE on an exposed service becomes more significant when supported by suspicious telemetry."}
+{"id":"det-17","type":"cve","text":"Observed behavior that matches likely attacker techniques increases the operational relevance of a vulnerability."}
+{"id":"det-18","type":"cve","text":"A vulnerability affecting an internet-facing asset with signs of exploitation should be treated as high analytical priority."}
+
+{"id":"det-19","type":"generic","text":"Office document execution followed by scripting activity is a common malicious pattern."}
+{"id":"det-20","type":"generic","text":"Script execution from temporary or user-writable directories is often associated with malicious behavior."}
+{"id":"det-21","type":"generic","text":"Sudden increases in outbound traffic may indicate data exfiltration, staging, or malware communication."}
+{"id":"det-22","type":"generic","text":"Multiple weak indicators observed together can form strong evidence of suspicious or malicious activity."}
+{"id":"det-23","type":"generic","text":"Correlated signals across endpoint, email, network, and intelligence sources increase confidence in malicious interpretation."}
+{"id":"det-24","type":"generic","text":"A single indicator may be ambiguous, but repeated aligned signals across telemetry sources often indicate meaningful suspicious activity."}
+
+{"id": "det-hash-clean-1", "type": "hash", "text": "A file with zero malicious detections across all antivirus engines and a clean verdict should be classified as benign. No action required."}
+{"id": "det-hash-clean-2", "type": "hash", "text": "When VirusTotal reports 0 malicious detections and reputation is neutral, the file is considered safe and should not be blocked."}
+{"id": "det-ip-clean-1", "type": "ip", "text": "An IP address with zero malicious detections on VirusTotal and a low AbuseIPDB score below 10 should be classified as clean. No blocking required."}
+{"id": "det-ip-clean-2", "type": "ip", "text": "When an IP shows no malicious activity across VirusTotal, AbuseIPDB and OTX, it should be treated as benign with threat_level low or clean."}
+{"id": "det-domain-clean-1", "type": "domain", "text": "A domain with zero malicious detections on VirusTotal and a low global risk score below 10 should be classified as clean and not blocked."}
+{"id": "det-domain-clean-2", "type": "domain", "text": "When a domain has no malicious verdicts and a clean reputation score, it poses no confirmed threat and should be classified as low risk."}
+{"id": "det-url-clean-1", "type": "url", "text": "A URL with zero malicious detections on VirusTotal, a clean Google Safe Browsing verdict and no PhishTank match should be classified as benign."}
+{"id": "det-url-clean-2", "type": "url", "text": "When all vendors return clean verdicts for a URL and the global risk score is low, the URL poses no confirmed threat. threat_level should be low or clean."}
+{"id": "det-email-clean-1", "type": "email", "text": "An email address from a domain with valid SPF and DMARC records, a high MXToolbox score above 70, and no alerts should be classified as clean."}
+{"id": "det-email-clean-2", "type": "email", "text": "When an email domain passes SPF, DKIM and DMARC checks with no blacklist alerts, it should be treated as legitimate. threat_level must be low or clean."}

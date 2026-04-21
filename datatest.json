@@ -1,0 +1,28 @@
+[
+ {"type": "hash","value": "56fe3bf825f9230a5599bfa7695f825d7f946ad685b4547b0340b3eadeb1c982","label": "malicious"},
+ {"type": "hash","value": "11e749078065aa2c7c9ebbf35b8c59c9ad4e804bb1240f432c8e6f4c628894b7","label": "malicious"},
+ {"type": "hash","value": "f51fab8041e5023d7290b540a2106f051ef0bd2bc3443c9daf318628b560fa29","label": "clean"},
+ {"type": "hash","value": "20513dd82fcb630c8a50dbd662bae6f76304a2a057346f95bb07713fcc34fba1","label": "clean"},
+                
+    {"type": "ip","value": "8.8.8.8","label": "clean"},
+    {"type": "ip","value": "8.8.4.4","label": "clean"},
+    {"type": "ip","value": "188.166.164.250","label": "malicious"},
+    {"type": "ip","value": "3.134.216.108","label": "malicious"},
+
+    {"type": "domain","value": "bing.com","label": "clean"},
+    {"type": "domain","value": "fastly.net","label": "clean"},
+    {"type": "domain","value": "00c3aecd.shop-game.xyz","label": "malicious"},
+    {"type": "domain","value": "00c238ff.hsduecinfj.com.cn","label": "malicious"},
+
+    {"type": "url","value": "http://www.easy-bank-landing-page-pi.vercel.app/","label": "malicious"},
+    {"type": "url","value": "http://ldgeer-ledger.webflow.io/","label": "malicious"},
+    {"type": "url","value": "https://google.com","label": "clean"},
+    {"type": "url","value": "https://gtld-servers.net","label": "clean"},
+
+  {"type": "mail", "value": "noreply@twitter.com", "label": "clean"},
+  {"type": "mail", "value": "security@google.com", "label": "clean"},
+  {"type": "mail", "value": "support@paypal-secure-login.com", "label": "malicious"},
+  {"type": "mail", "value": "noreply@apple-id-verify.net", "label": "malicious"}
+]
+
+

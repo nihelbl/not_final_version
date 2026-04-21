@@ -1,0 +1,1003 @@
+[
+    {
+        "type": "ip",
+        "value": "188.166.164.250",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "3.134.216.108",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "203.161.47.131",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "190.19.15.203",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "61.137.136.255",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "103.172.236.15",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "195.184.76.21",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "209.38.204.16",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "36.135.62.97",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "47.77.232.44",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "80.66.66.70",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "2.57.121.69",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "43.252.231.122",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "2.57.121.25",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "85.184.248.187",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "120.48.109.159",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "87.251.64.145",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "125.124.92.11",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "180.76.243.197",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "52.243.57.116",
+        "label": "malicious"
+    },
+    {
+        "type": "ip",
+        "value": "8.8.8.8",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "8.8.4.4",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "1.1.1.1",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "1.0.0.1",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "154.243.128.6",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "149.112.112.112",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "208.67.222.222",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "208.67.220.220",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "64.6.64.6",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "154.243.128.7",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "77.88.8.8",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "77.88.8.1",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "185.228.168.9",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "185.228.169.9",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "94.140.14.14",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "94.140.15.15",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "154.243.128.9",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "8.20.247.20",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "156.154.70.1",
+        "label": "clean"
+    },
+    {
+        "type": "ip",
+        "value": "154.243.128.8",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "bing.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "fastly.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "netflix.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "microsoftonline.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "whatsapp.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "appsflyersdk.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "workers.dev",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "office.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "apple-dns.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "wordpress.org",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "digicert.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "sharepoint.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "trafficmanager.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "youtu.be",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "aaplimg.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "booking.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "ezviz7.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "pinterest.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "whatsapp.com",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "cloudfront.net",
+        "label": "clean"
+    },
+    {
+        "type": "domain",
+        "value": "00c3aecd.shop-game.xyz",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "00c238ff.hsduecinfj.com.cn",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "012841010.duckdns.org",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "012de12faamaijf-cfbb43.ingress-earth.ewp.live",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "0167189.synergyglobal.one",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "022saibo.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "metmasklogi.iwopop.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps-goto.top",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps-ordersearch.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps-packagestrack.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.uspsreceive.xyz",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps-redressal.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps.track.1cds5yc.shop",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps.track.3j45otl.shop",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps.track.3ssfxot.shop",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "tools.usps-trackbhxyzhi.top",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "toolsuspstracking.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "trackbest.click",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "track.bloggersideas.com",
+        "label": "malicious"
+    },
+    {
+        "type": "domain",
+        "value": "track.blogmarketcom.fr",
+        "label": "malicious"
+    },
+    
+    {
+        "type": "hash",
+        "value": "56fe3bf825f9230a5599bfa7695f825d7f946ad685b4547b0340b3eadeb1c982",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "11e749078065aa2c7c9ebbf35b8c59c9ad4e804bb1240f432c8e6f4c628894b7",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "03be82b4584df81b03a384048ad2110d6997055b6f7d96a70818c1708ad499a0",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "65e847a202c09cc5867132c9f95163752f226112e7b18928bc3cd3d0d82d98fd",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "1a164d10fe3ca9a603c70bcf83a667b92bab36dbb1705c6865fb83a48935649f",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "35bffefae9ea98e5230f833b75f3cd03b153c75aff4e2de85f128eb4c46f2d07",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "4147788b1da502a44822584fd2807518de229831ba33d086f6fdb35e4792d828",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "1ac890ff8a824da863fbf28eb585438fd7654abd2653f8d49537fc27bce78704",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "c7048bdd078bbaf4445ebf4fa399fdd5df8b59cd61ea32b9300a562f0d94d1c4",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "e77fbe6e641e6615465633ff9b7f9b2a2e88a845b840d39fc20882cac5e397ad",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "8c9bd82cd489bb95827d3653ae3cfa3ab9879a35e16ef47855265c333198d09f",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "bbce892cfb07316be1fdacd7b14e221145dbf9998c6ecabee06e608175238571",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "0b73403a776892ab2266e3c0037d17bdde40b1a07938ea9d8e1696517dc70bea",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "2ecb64da9769bc86b4e6d4f0f878baa991b9eb0aedf616d41bdcb20281417162",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "79e2e9257117573fa0b26cc3ed90bed76088421b2d74c6d2be4559acb726988b",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "24355464d214951029a59d1dd8ffa48a6bc8a7a1e6873bf045402b1ffbff9cb9",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "a8897e97b9bfad7e7912b8e50afbe9d2d76bde5162a434ebd678d3a857f9e7ee",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "e64439c378326542318970b435d55bd27d85452786abdf0a989121d7eae87a97",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "2b1f971f0a4f1b97560936543a216589e820960d64569dd85e40a242b680cba9",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "d90d806ef59f667afb9f63adf98af977ee24bb2ea0ff4afd5030f5b97f0b629a",
+        "label": "malicious"
+    },
+    {
+        "type": "hash",
+        "value": "f51fab8041e5023d7290b540a2106f051ef0bd2bc3443c9daf318628b560fa29",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "20513dd82fcb630c8a50dbd662bae6f76304a2a057346f95bb07713fcc34fba1",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "dea4ed8963aef4c8ce4aa1491410f614fd6d9b0e07737a9b634612adad731630",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "62800679c55682f2f5f38b3df9080d12480bea78b5b8476eace9df014f353b14",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "84b484fd3636f2ca3e468d2821d97aacde8a143a2724a3ae65f48a33ca2fd258",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "81bd48985fa1753e9e2158a7cf969141edddbd050e976801bb477e24a2a06b2a",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "f682aadda9deb654885ae17909380a25f7cb1a43ac0934ac425ee8de4924c7f3",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "fa8e51787b6dbd53de63b2db26a3e337177a94c2bedd3d44991e9cfc7419f40e",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "53de1af89065816ccfad467e8fde2c2ed9dd5092c57af3b1b878c20e7d424001",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "141fc84c71967e2441e229368ae4e4cb2a2255d06b975a3c9d9cf4a8e5544ac3",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "0f37e40be5f08aa72b5a1252fa284c2fedf686eae5df7a7834c7469dfa50a89c",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "7181930f399a9e93f989477dfbd4533468bdfa7bdc9e404be12373733478a325",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "d4fd2d7f1194d0b20516bfabe82d01ea80cf8cabb08f9585e6cb7f60cfb422bd",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "96e01cdc713a4306abb3b58aef982d67a209dddadc8cff5c4c77a5595f712828",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "064181108cd8d7f110cc11b84dbf2d7f18fd5f52a2ee989985d88a969f093dbe",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "c887e1dab6255d334254817c5b2f51c4aed2d67816c7e55d69c7759acb951c9e",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "cf9cc5a552de280750b36743e80c33381e59d5ec8aa65a2dcfdd6a34198799bc",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "90c461ec4437a8f0de53cb69bca491c1294cc2e6fa1b91b1f608412ab59a1f35",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "dab56d6f41827a9cf2634ab3137af7b75a76a2618a5e84ffe1c3581dae868506",
+        "label": "clean"
+    },
+    {
+        "type": "hash",
+        "value": "9b77d4c912f2edae8c241d0ece1094d2ac068b084269ceaf85d7c7b085d2ae86",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "http://www.easy-bank-landing-page-pi.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://ldgeer-ledger.webflow.io/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://facebook-login-page-clone-gamma.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://netflix-clone-azure-nine.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.netflix-clone-azure-nine.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.amazon-clone-part-1.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://info-resmi388.blogspot.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://instagram-clone-delta-two.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.instagram-clone-delta-two.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://galabetz.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://kukuoinlogons.webflow.io/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://easy-bank-beta.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://coinsquuare-loginx.webflow.io/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://roblx.me/s/NsPk0f",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://metamakakslogi-us.godaddysites.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.metamakakslogi-us.godaddysites.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://yinkebio.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://netflix-clone-five-sigma.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.amazonwebclone.vercel.app/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "http://www.facebooksuporteolaine.blogspot.com/",
+        "label": "malicious"
+    },
+    {
+        "type": "url",
+        "value": "https://google.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://gtld-servers.net",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://facebook.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://gstatic.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://cloudflare.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://googleapis.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://microsoft.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://mail.ru",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://youtube.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://apple.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://amazonaws.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://pv-cdn.net",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://booking.com/",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://akamai.net",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://dzen.ru",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://twitter.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://fbcdn.net",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://linkedin.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://googletagmanager.com",
+        "label": "clean"
+    },
+    {
+        "type": "url",
+        "value": "https://googlevideo.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "432rfe3@eudoramail.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "GoneForGood@btamail.net.cn",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "freedombuilder@btamail.net.cn",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "helpdesk@europeaninternet.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "listmaster@linux.ie",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "ibrahimkojo@caramail.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "fork@xent.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "codonnell@netnation.ie",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "remove@europeaninternet.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "unsub-56446664-3@william.monsterjoke.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "jm@news4.inlink.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "Spamassassin-Sightings@lists.sourceforge.net",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "romkabila@presidency.com",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "zzzz@spamassassin.taint.org",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "sales@sesystems.co.uk",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "cwalsh@netnation.ie",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "gbarcoe@netnation.ie",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "print2@btamail.net.cn",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "debtgone@btamail.net.cn",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "ilug@linux.ie",
+        "label": "malicious"
+    },
+    {
+        "type": "email",
+        "value": "kra@monkey.org",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "Spambayes@python.org",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "marty@halvorson.us",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "qqqqqqqqqq-zdnet@spamassassin.taint.org",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "mothlight@fastmail.fm",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "alerts@action.eff.org",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "fork@spamassassin.taint.org",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "waider@waider.ie",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "editor@lawsnet.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "matthias@egwn.net",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "1030544555.28815.TMDA@deepeddy.vircio.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "forteana-unsubscribe@egroups.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "help@oreillynet.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "angles@aminvestments.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "Razor-users@lists.sourceforge.net",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "frlinux@frlinux.net",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "listmaster@linux.ie",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "denis@shagmail.com",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "claw@kanga.nu",
+        "label": "clean"
+    },
+    {
+        "type": "email",
+        "value": "IIU@iiu.taint.org",
+        "label": "clean"
+    }
+]

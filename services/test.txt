@@ -1,0 +1,23 @@
+ rag_docs = cleaned if cleaned else rag_docs[:2]  # garde max 2 docs si tout négatif
+        # ── Post-processing hash : correction basée sur VT ──
+        if ioc_type == "hash":
+         vt_malicious = raw.get("detection", {}).get("malicious", 0)
+         otx_pulses = (raw.get("otx") or {}).get("pulse_count", 0)
+        
+         # Si VT détecte 5+ engines malveillants → force high minimum
+         if vt_malicious >= 5:
+             tl = _lower(llm_result.get("threat_level", ""))
+             if tl in ("clean", "low", "unknown"):
+                 print(f"[HASH] VT detections={vt_malicious} → force high")
+                 llm_result["threat_level"] = "high"
+                 llm_result["score"] = max(75, llm_result.get("score", 75))
+        
+         # Si VT=0 et OTX=0 et pas de tags MITRE → cap à low
+         elif vt_malicious == 0 and otx_pulses == 0:
+             mitre = raw.get("mitre_attack", [])
+             if not mitre:
+                 tl = _lower(llm_result.get("threat_level", ""))
+                 if tl in ("high", "critical", "medium"):
+                     print(f"[HASH] VT=0 OTX=0 MITRE=0 → cap à low")
+                     llm_result["threat_level"] = "low"
+                     llm_result["score"] = min(25, llm_result.get("score", 25))

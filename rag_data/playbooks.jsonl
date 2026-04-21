@@ -1,0 +1,32 @@
+{"id":"pb-1","type":"hash","text":"When a malicious file hash is identified, review where the file was observed, whether it executed, and which hosts or users were exposed."}
+{"id":"pb-2","type":"hash","text":"For a suspicious executable, document file metadata, submission history, detection consistency, and any related endpoint activity."}
+{"id":"pb-3","type":"hash","text":"When a file shows strong malicious detections, correlate it with process creation, persistence locations, and outbound network traffic."}
+
+{"id":"pb-4","type":"ip","text":"For a suspicious IP address, determine whether communication was inbound or outbound, which systems were involved, and whether the timing matches other alerts."}
+{"id":"pb-5","type":"ip","text":"When investigating an external IP, correlate firewall, proxy, DNS, and endpoint telemetry to understand usage context."}
+{"id":"pb-6","type":"ip","text":"For an IP with poor reputation, verify whether it belongs to common cloud infrastructure before drawing conclusions."}
+
+{"id":"pb-7","type":"domain","text":"When a suspicious domain is identified, review registration context, usage patterns, related URLs, and whether it appears in email or browser activity."}
+{"id":"pb-8","type":"domain","text":"For domains referenced in multiple alerts, identify affected users, systems, and possible delivery mechanisms such as email or web access."}
+
+{"id":"pb-9","type":"url","text":"When analyzing a suspicious URL, review redirection behavior, hosting context, access source, and any resulting download or execution activity."}
+{"id":"pb-10","type":"url","text":"For URLs linked to user activity, correlate access timestamps with browser, proxy, and endpoint telemetry to assess possible compromise."}
+
+{"id":"pb-11","type":"email","text":"When suspicious email indicators are present, review sender identity, authentication signals, embedded links, attachment metadata, and delivery scope."}
+{"id":"pb-12","type":"email","text":"For email-related investigations, document user interaction, message spread, and any follow-on endpoint or network events."}
+
+{"id":"pb-13","type":"cve","text":"When triaging a CVE, evaluate affected asset exposure, relevant software version, exploit maturity, and any telemetry that suggests exploitation."}
+{"id":"pb-14","type":"cve","text":"For vulnerabilities on exposed services, correlate asset inventory data with process, authentication, and network evidence."}
+
+{"id":"pb-15","type":"generic","text":"When multiple indicators appear together, build a timeline showing submission, access, execution, and network activity to improve interpretation."}
+{"id":"pb-16","type":"generic","text":"For suspicious artifacts with limited evidence, assess confidence by comparing reputation, detections, prevalence, and supporting telemetry."}
+{"id":"pb-17","type":"generic","text":"When repeated alerts reference the same indicator, determine whether they represent a single event, recurring activity, or a broader campaign."}
+{"id":"pb-18","type":"generic","text":"For new or low-prevalence indicators, prioritize contextual analysis such as affected host role, user activity, and timing relative to other alerts."}
+{"id":"pb-19","type":"generic","text":"When threat intelligence references are present, compare them with local telemetry to decide whether the indicator is relevant to the environment."}
+{"id":"pb-20","type":"generic","text":"For ambiguous indicators, document both malicious and benign explanations and weigh them against available evidence."}
+
+{"id": "pb-hash-clean-1", "type": "hash", "text": "When a file hash shows zero detections and a clean verdict, document it as benign, close the investigation, and whitelist if it appears in recurring alerts."}
+{"id": "pb-ip-clean-1", "type": "ip", "text": "When an IP shows zero malicious detections and low abuse score, mark it as clean, document the result and whitelist if it generates repeated false alerts."}
+{"id": "pb-domain-clean-1", "type": "domain", "text": "When a domain has no malicious detections and a clean reputation, close the investigation, document as benign and add to whitelist if needed."}
+{"id": "pb-url-clean-1", "type": "url", "text": "When a URL is clean across all vendors with a low risk score, mark the alert as false positive, document the result and whitelist the URL if appropriate."}
+{"id": "pb-email-clean-1", "type": "email", "text": "When an email address passes all authentication checks and has no blacklist alerts, close the investigation, classify as legitimate and document the result."}

@@ -1,0 +1,102 @@
+{"id":"intel-1","type":"hash","text":"A high number of malicious detections across multiple antivirus engines strongly increases confidence that a file is malicious."}
+{"id":"intel-2","type":"hash","text":"A low detection count does not guarantee safety, especially for newly submitted or previously unseen files."}
+{"id":"intel-3","type":"hash","text":"A strongly negative reputation score indicates prior association with malicious activity and should increase investigation priority."}
+{"id":"intel-4","type":"hash","text":"Repeated submissions of a file over time suggest it has been observed in multiple environments or campaigns."}
+{"id":"intel-5","type":"hash","text":"A Windows executable file type combined with high detections is commonly associated with malware samples."}
+{"id":"intel-6","type":"hash","text":"A file without related IP or network indicators can still be malicious, especially if it has not been executed in sandbox environments."}
+{"id":"intel-7","type":"hash","text":"Threat intelligence pulse references indicate that a file or indicator has been observed in known threat campaigns."}
+{"id":"intel-8","type":"hash","text":"A high confidence rating combined with high risk level indicates strong agreement between multiple analysis sources."}
+{"id":"intel-9","type":"hash","text":"A suspicious file should be correlated with endpoint telemetry such as process execution and file creation events."}
+{"id":"intel-10","type":"hash","text":"A newly observed file with strong malicious detections may indicate an active or emerging threat."}
+
+{"id":"intel-11","type":"ip","text":"IP addresses flagged by multiple intelligence sources should be evaluated in the context of network traffic patterns."}
+{"id":"intel-12","type":"ip","text":"Repeated outbound connections to a single external IP may indicate beaconing or command and control behavior."}
+{"id":"intel-13","type":"ip","text":"IP reputation alone should not determine maliciousness without analyzing communication context and frequency."}
+{"id":"intel-14","type":"ip","text":"Connections to rare or unknown IP addresses outside normal network behavior may indicate suspicious activity."}
+{"id":"intel-15","type":"ip","text":"Cloud-hosted IP addresses require additional validation since they can be used for both legitimate and malicious purposes."}
+{"id":"intel-16","type":"ip","text":"An IP contacted by multiple internal systems in a short time window may indicate shared exposure or coordinated activity."}
+{"id":"intel-17","type":"ip","text":"IP analysis is stronger when combined with firewall, proxy, DNS, and endpoint telemetry."}
+{"id":"intel-18","type":"ip","text":"Inbound connections from suspicious external IPs should be interpreted differently from outbound user-initiated traffic."}
+{"id":"intel-19","type":"ip","text":"Rare geographic patterns or unusual ASN associations can increase suspicion when they do not match business context."}
+{"id":"intel-20","type":"ip","text":"Short-lived or newly observed IP infrastructure may indicate disposable attacker-controlled resources."}
+
+{"id":"intel-21","type":"domain","text":"Domains with low reputation and recent registration dates are commonly associated with phishing or malicious campaigns."}
+{"id":"intel-22","type":"domain","text":"A domain used in login pages that mimics known brands is a strong phishing indicator."}
+{"id":"intel-23","type":"domain","text":"Domains appearing in both email and web traffic logs may indicate user interaction with malicious content."}
+{"id":"intel-24","type":"domain","text":"Multiple alerts referencing the same domain may indicate broader campaign activity."}
+{"id":"intel-25","type":"domain","text":"A domain without business relevance but present in alerts should be treated as suspicious until validated."}
+{"id":"intel-26","type":"domain","text":"Low-prevalence domains seen across several telemetry sources should receive higher investigative priority."}
+{"id":"intel-27","type":"domain","text":"A domain associated with credential collection themes is more suspicious when combined with brand impersonation."}
+{"id":"intel-28","type":"domain","text":"Typosquatting, homoglyphs, and visually similar names are common patterns in malicious domain usage."}
+{"id":"intel-29","type":"domain","text":"Domains involved in repeated redirects or chained infrastructure may indicate phishing or malware delivery ecosystems."}
+{"id":"intel-30","type":"domain","text":"A domain may appear benign in isolation but become suspicious when correlated with delivery, hosting, or user interaction evidence."}
+
+{"id":"intel-31","type":"url","text":"URLs that include redirections or obfuscated paths are commonly used in phishing and malware delivery."}
+{"id":"intel-32","type":"url","text":"A URL associated with a download event followed by execution activity may indicate infection chain behavior."}
+{"id":"intel-33","type":"url","text":"User interaction with a suspicious URL is a key factor in determining potential compromise."}
+{"id":"intel-34","type":"url","text":"Encoded parameters, shortened links, and multi-stage redirects often reduce transparency and increase analysis difficulty."}
+{"id":"intel-35","type":"url","text":"A URL embedded in email and later accessed through a browser may indicate successful delivery and user engagement."}
+{"id":"intel-36","type":"url","text":"Suspicious URLs should be interpreted in the context of referrer source, browser history, and resulting endpoint events."}
+{"id":"intel-37","type":"url","text":"Credential-themed or fake login URLs are more suspicious when hosted on unrelated or newly observed infrastructure."}
+{"id":"intel-38","type":"url","text":"A clean verdict on a URL does not guarantee safety if the content or redirect chain changes over time."}
+{"id":"intel-39","type":"url","text":"URLs leading to file downloads, script content, or browser exploits carry higher investigative relevance than simple informational pages."}
+{"id":"intel-40","type":"url","text":"URL analysis becomes stronger when combined with domain reputation, hosting context, and user access timing."}
+
+{"id":"intel-41","type":"email","text":"Email-based indicators should be evaluated based on sender reputation, authentication results, and content structure."}
+{"id":"intel-42","type":"email","text":"Emails containing links or attachments combined with unusual sender patterns are commonly associated with phishing."}
+{"id":"intel-43","type":"email","text":"Multiple recipients receiving similar messages suggests a phishing campaign rather than isolated activity."}
+{"id":"intel-44","type":"email","text":"Attachment-based threats often rely on user interaction to trigger execution."}
+{"id":"intel-45","type":"email","text":"Failed or missing SPF, DKIM, or DMARC signals can increase suspicion when combined with deceptive sender patterns."}
+{"id":"intel-46","type":"email","text":"Email analysis should consider whether the message led to URL access, file download, credential entry, or process execution."}
+{"id":"intel-47","type":"email","text":"Urgency language, impersonation themes, and unexpected attachments are common phishing characteristics."}
+{"id":"intel-48","type":"email","text":"A sender that appears legitimate in display name but differs in actual address can indicate impersonation."}
+{"id":"intel-49","type":"email","text":"An email becomes more significant when similar indicators appear in mailbox, proxy, and endpoint telemetry."}
+{"id":"intel-50","type":"email","text":"A single suspicious message may be low confidence, but repeated similar messages across users strongly suggest campaign activity."}
+
+{"id":"intel-51","type":"cve","text":"A CVE affecting an exposed service should be prioritized based on exploit availability and exposure level."}
+{"id":"intel-52","type":"cve","text":"High severity vulnerabilities do not always indicate active exploitation without supporting telemetry."}
+{"id":"intel-53","type":"cve","text":"Correlation between vulnerability data and observed behavior increases confidence in exploitation assessment."}
+{"id":"intel-54","type":"cve","text":"Exploit maturity, public proof-of-concept availability, and internet exposure strongly influence vulnerability risk interpretation."}
+{"id":"intel-55","type":"cve","text":"A CVE is more operationally relevant when the affected product and version are confirmed in the environment."}
+{"id":"intel-56","type":"cve","text":"Critical vulnerabilities on internal-only systems may be lower priority than exposed services with moderate severity but active attack paths."}
+{"id":"intel-57","type":"cve","text":"Suspicious process, network, or authentication activity near a vulnerable asset can increase confidence in possible exploitation."}
+{"id":"intel-58","type":"cve","text":"Asset role and exposure context are essential when judging whether a vulnerability is likely to be targeted."}
+{"id":"intel-59","type":"cve","text":"The absence of exploitation evidence does not eliminate the importance of a widely exploited or publicly weaponized vulnerability."}
+{"id":"intel-60","type":"cve","text":"Vulnerability analysis is stronger when combined with asset inventory, software version data, and live telemetry."}
+
+{"id":"intel-61","type":"generic","text":"Unusual process execution patterns such as scripts running from temporary directories may indicate malicious behavior."}
+{"id":"intel-62","type":"generic","text":"Office document execution followed by scripting activity is commonly associated with macro-based attacks."}
+{"id":"intel-63","type":"generic","text":"Sudden increases in outbound traffic may indicate data exfiltration or malware activity."}
+{"id":"intel-64","type":"generic","text":"A combination of file indicators and network activity provides stronger evidence than either alone."}
+{"id":"intel-65","type":"generic","text":"Indicators observed across multiple telemetry sources increase confidence in malicious classification."}
+{"id":"intel-66","type":"generic","text":"Absence of detection does not imply absence of threat, especially for new or targeted attacks."}
+{"id":"intel-67","type":"generic","text":"Strong agreement between multiple detection engines reduces the likelihood of false positives."}
+{"id":"intel-68","type":"generic","text":"Behavioral indicators are often more reliable than static signatures when assessing threats."}
+{"id":"intel-69","type":"generic","text":"Correlating multiple weak signals can produce strong evidence of malicious activity."}
+{"id":"intel-70","type":"generic","text":"Context such as user activity, system role, and timing is critical when interpreting threat indicators."}
+{"id":"intel-71","type":"generic","text":"High confidence combined with multiple independent indicators significantly reduces the likelihood of false positives."}
+{"id":"intel-72","type":"generic","text":"Single indicators should be interpreted cautiously without supporting context or correlation."}
+{"id":"intel-73","type":"generic","text":"Correlation across different telemetry sources provides stronger evidence than isolated observations."}
+{"id":"intel-74","type":"generic","text":"The absence of indicators does not guarantee the absence of compromise."}
+{"id":"intel-75","type":"generic","text":"Contextual factors such as user behavior, host role, and timing are critical when assessing risk."}
+{"id":"intel-76","type":"generic","text":"Low-prevalence indicators should be interpreted carefully because rarity can indicate either novelty or lack of visibility."}
+{"id":"intel-77","type":"generic","text":"Threat assessment quality improves when technical findings are weighed together with environmental relevance."}
+{"id":"intel-78","type":"generic","text":"A single strong signal may be meaningful, but several moderate signals together often provide better confidence."}
+{"id":"intel-79","type":"generic","text":"Indicators that align across endpoint, network, email, and intelligence sources deserve higher analytical confidence."}
+{"id":"intel-80","type":"generic","text":"Analytical confidence should reflect both the quality of the evidence and the amount of corroboration available."}
+
+{"id": "intel-hash-clean-1", "type": "hash", "text": "A file with no detections from any antivirus engine and a clean global verdict has no confirmed threat association. threat_level should be low or clean."}
+{"id": "intel-hash-clean-2", "type": "hash", "text": "Zero malicious detections combined with a clean verdict on VirusTotal strongly indicates the file is not malicious. Classify as low risk."}
+{"id": "intel-hash-clean-3", "type": "hash", "text": "A clean file verdict with no OTX pulse references and no MITRE ATT&CK techniques confirmed means the file poses no known threat at this time."}
+{"id": "intel-ip-clean-1", "type": "ip", "text": "An IP address with no abuse reports, zero VirusTotal malicious detections and no OTX pulses is considered benign. No threat action needed."}
+{"id": "intel-ip-clean-2", "type": "ip", "text": "When AbuseIPDB confidence score is below 10 and VirusTotal shows clean verdict, the IP has no confirmed malicious history. Classify as low risk."}
+{"id": "intel-ip-clean-3", "type": "ip", "text": "A low AbuseIPDB score combined with zero malicious VT detections and no pulse activity strongly indicates a legitimate IP address."}
+{"id": "intel-domain-clean-1", "type": "domain", "text": "A domain registered with a reputable registrar, no malicious VT detections and a low global risk score is considered safe and legitimate."}
+{"id": "intel-domain-clean-2", "type": "domain", "text": "When VirusTotal reports zero malicious detections for a domain and the reputation score is neutral or positive, classify as clean with low threat level."}
+{"id": "intel-domain-clean-3", "type": "domain", "text": "A domain with no suspicious subdomains, clean VT verdict and no blacklist presence poses no confirmed threat. threat_level should be low or clean."}
+{"id": "intel-url-clean-1", "type": "url", "text": "A URL with clean verdicts from VirusTotal, Google Safe Browsing and PhishTank has no confirmed malicious association. Classify as benign."}
+{"id": "intel-url-clean-2", "type": "url", "text": "When all threat intelligence vendors return clean or unknown verdicts for a URL with a low global risk score, the URL is considered safe."}
+{"id": "intel-url-clean-3", "type": "url", "text": "A URL pointing to a known legitimate domain with zero malicious detections should not be flagged. threat_level must be low or clean."}
+{"id": "intel-email-clean-1", "type": "email", "text": "An email address with a high MXToolbox score, valid SPF and DMARC, and no blacklist alerts is considered legitimate. threat_level should be low or clean."}
+{"id": "intel-email-clean-2", "type": "email", "text": "When an email domain has proper authentication records and no abuse reports, it should be classified as clean regardless of its name or appearance."}
+{"id": "intel-email-clean-3", "type": "email", "text": "A well-configured email domain with passing SPF, DKIM and DMARC checks and a MXToolbox score above 70 poses no phishing risk. Classify as benign."}
