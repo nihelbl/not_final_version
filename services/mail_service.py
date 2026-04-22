@@ -34,7 +34,7 @@ def detect_suspicious_tld(domain):
 
 def detect_typosquatting(domain):
     """Détecte si le domaine imite une marque connue"""
-    marques = ['apple', 'paypal', 'amazon', 'microsoft', 'google', 'facebook', 'netflix', 'dhl', 'fedex', 'ebay']
+    marques = ['apple', 'paypal', 'amazon', 'microsoft', 'google', 'facebook', 'netflix', 'dhl', 'fedex', 'ebay','dropbox','zoom']
     domain_lower = domain.lower().replace('-', '').replace('.', '')
     for marque in marques:
         if marque in domain_lower:
@@ -329,8 +329,10 @@ def check_mail_reputation(email):
             result["alertes"].append(parking_alert)
             result["score"] -= 15
     
-    if domain in ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "microsoft.com", "google.com",]:
-        result["score"] = 100
+    if domain in ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com","microsoft.com","google.com","dropbox.com", "zoom.us", "icloud.com", "protonmail.com","proton.me", "zoho.com", "mail.ru", "aol.com","twitter.com", "github.com", "microsoft.com", "amazon.com", "linkedin.com", "apple.com", "paypal.com", "facebook.com", "netflix.com", "action.eff.org", "python.org", "stackoverflow.com", "cloudflare.com", "discord.com", "slack.com", "adobe.com", "spotify.com", "mozilla.org"]:
+     result["score"] = 100
+     result["verdict"] = "fiable"
+     result["alertes"] = [a for a in result["alertes"] if "DMARC" not in a and "SPF" not in a]
 
     # -------------------- Nettoyage et verdict --------------------
     result["alertes"] = list(dict.fromkeys(result["alertes"]))

@@ -6,6 +6,18 @@ logger      = logging.getLogger(__name__)
 LLM_API_URL = os.getenv("LLM_API_URL", "")
 
 
+def _normalize_mail_auth_status(value: object) -> str:
+    """Normalise SPF/DMARC/DKIM pour éviter les champs vides ambigus côté LLM."""
+    s = (str(value) if value is not None else "").strip().lower()
+    if not s or s in ("n/a", "na", "none", "null", "unknown", "absent", "missing", "false"):
+        return "missing"
+    if "permerror" in s or "neutral" in s or "softfail" in s or "permissive" in s:
+        return "permissive"
+    if "valid" in s or "pass" in s or "enforce" in s or "quarantine" in s or "reject" in s:
+        return "valid"
+    return "present"
+
+
 # ── Elle reçoit juste raw_data qui est déjà collecté, et elle reformate ce dict pour l'envoyer au LLM ─────────────────────────
 def _build_ti_data(ioc_type: str, raw_data: dict) -> dict:
     ioc_type = ioc_type.lower()
@@ -180,13 +192,34 @@ def _fallback(ti_data: dict, reason: str) -> dict:
             "cve":    ["CIRCL", "NVD"]
     }
 
+    if score <= 10:   # seuil bas
+        if ioc_type == "mail":
+            domain = ti_data.get("domain", "inconnu")
+            mx_score = ti_data.get("score", 100)
+            summary = (f"Adresse email sur {domain}. Configuration email valide (score MXToolbox {mx_score}). "
+                       f"Aucune alerte. Indicateur bénin (LLM indisponible : {reason}).")
+        elif ioc_type == "ip":
+            ip = ti_data.get("indicator", "inconnue")
+            summary = f"IP {ip} : aucune détection malveillante, faible score de réputation. Propre (fallback : {reason})."
+        elif ioc_type == "domain":
+            domain = ti_data.get("indicator", "inconnu")
+            summary = f"Domaine {domain} : aucun signal malveillant. Classification propre (fallback : {reason})."
+        else:
+            summary = f"Aucune menace détectée. Indicateur propre (fallback : {reason})."
+    else:
+        # Conserver l'ancien comportement pour les indicateurs suspects/malveillants
+        summary = f"Analyse par regles (LLM offline : {reason})."
+    
+    level = ("critical" if score >= 80 else "high"   if score >= 60 else
+             "medium"   if score >= 40 else "low"    if score >= 20 else "clean")
+    
     return {
-        "threat_level":   level,
-        "score":          score,
-        "summary":        f"Analyse par règles (LLM offline : {reason}).",
-        "tags":           tags,
-        "sources_ti":     sources_map.get(ioc_type, ["VirusTotal"]),
-        "fallback":       True
+        "threat_level": level,
+        "score": score,
+        "summary": summary,
+        "tags": tags,
+        "sources_ti": sources_map.get(ioc_type, ["VirusTotal"]),
+        "fallback": True
     }
 
 
@@ -223,8 +256,8 @@ def enrich_ioc(ioc_type: str, raw_data: dict) -> dict:
         return result
 
     except requests.exceptions.Timeout:
-        logger.warning("[LLM] Timeout 180s")
-        return _fallback(ti_data, reason="timeout 180s")   # ← était: {"error": ..., "fallback": True}
+        logger.warning("[LLM] Timeout 240s")
+        return _fallback(ti_data, reason="timeout 240s")   # ← était: {"error": ..., "fallback": True}
 
     except requests.exceptions.ConnectionError:
         logger.warning("[LLM] Colab/ngrok inaccessible")
@@ -242,125 +275,207 @@ def enrich_with_rag(ioc: str, ioc_type: str, final_verdict: str, rag_docs: list,
     if not LLM_API_URL:
         return {"error": "LLM_API_URL manquant"}
 
-    # Construction du contexte RAG (consigne anti-faux positifs : le TI prime sur des règles génériques)
     rag_preamble = (
-        "Les extraits ci-dessous sont des notes internes génériques (détection / playbooks). "
-        "Ils ne constituent pas une preuve de compromission. "
-        "Si les mesures TI ci-dessous indiquent absence de détections malveillantes ou verdict bénin, "
-        "ne pas augmenter threat_level ni recommander un blocage agressif sur la seule base de ces extraits.\n\n"
+        "RAG policy: les extraits ci-dessous sont un enrichissement secondaire. "
+        "Les données TI structurées du payload sont la source d'autorité principale. "
+        "Ne jamais contredire les champs TI (score, verdict, alertes, SPF/DMARC/DKIM, détections). "
+        "Si les TI sont bénins, conserver une conclusion bénigne et factuelle.\n\n"
     )
     context_block = rag_preamble + "\n".join(
         f"[{r['source']}] (score={r['score']}) {r['text']}"
         for r in rag_docs
     ) if rag_docs else "Aucune donnée interne disponible."
 
-    # Construction du payload avec TOUTES les données TI nécessaires à Gemma
     payload = {
-        "indicator": ioc,
-        "type": ioc_type,
-        "rag_context": context_block,
+        "indicator":     ioc,
+        "type":          ioc_type,
+        "rag_context":   context_block,
         "final_verdict": final_verdict,
     }
 
-    # Ajout des champs spécifiques selon le type d'IOC
+    # ── IP ────────────────────────────────────────────────
     if ioc_type == "ip":
         payload.update({
-            "vt_malicious_count": ti_data.get("vt_malicious_count", 0),
-            "vt_total_engines": ti_data.get("vt_total_engines", 0),
-            "vt_verdict": ti_data.get("vt_verdict", "unknown"),
+            "vt_malicious_count":  ti_data.get("vt_malicious_count", 0),
+            "vt_total_engines":    ti_data.get("vt_total_engines", 0),
+            "vt_verdict":          ti_data.get("vt_verdict", "unknown"),
             "vt_malware_families": ti_data.get("vt_malware_families", []),
-            "abuseipdb_score": ti_data.get("abuseipdb_score", 0),
-            "otx_pulse_count": ti_data.get("otx_pulse_count", 0),
-            "country": ti_data.get("country", "unknown"),
+            "abuseipdb_score":     ti_data.get("abuseipdb_score", 0),
+            "otx_pulse_count":     ti_data.get("otx_pulse_count", 0),
+            "country":             ti_data.get("country", "unknown"),
         })
-        if str(final_verdict).strip().lower() == "suspicious":
+        vt_mal = ti_data.get("vt_malicious_count", 0)
+        abuse  = ti_data.get("abuseipdb_score", 0)
+        fv     = str(final_verdict).strip().lower()
+        if fv == "suspicious":
             payload["triage_note"] = (
-                "Verdict TI = suspicious (pas malicious confirmé). "
-                "Réponse attendue : threat_level au plus « medium » ou « suspicious » ; "
-                "éviter high/critical sans preuve explicite dans les champs TI."
+                "Verdict TI = suspicious. "
+                "threat_level must be at most medium. "
+                "Avoid high/critical without explicit malicious evidence."
             )
+        elif vt_mal == 0 and abuse < 20:
+            payload["triage_note"] = (
+                "VirusTotal shows 0 malicious detections and AbuseIPDB score is low. "
+                "Final verdict is Clean. "
+                "threat_level MUST be low or clean. "
+                "Write a clear summary: this IP shows no known malicious activity "
+                "and appears legitimate based on available threat intelligence."
+            )
+
+    # ── HASH ──────────────────────────────────────────────
     elif ioc_type == "hash":
         payload.update({
-            "vt_malicious_count": ti_data.get("vt_malicious_count", 0),
-            "vt_suspicious": ti_data.get("vt_suspicious", 0),
-            "file_type": ti_data.get("file_type", "unknown"),
-            "vt_reputation": ti_data.get("vt_reputation", 0),
-            "otx_pulse_count": ti_data.get("otx_pulse_count", 0),
+            "vt_malicious_count":   ti_data.get("vt_malicious_count", 0),
+            "vt_suspicious":        ti_data.get("vt_suspicious", 0),
+            "file_type":            ti_data.get("file_type", "unknown"),
+            "vt_reputation":        ti_data.get("vt_reputation", 0),
+            "otx_pulse_count":      ti_data.get("otx_pulse_count", 0),
             "otx_malware_families": ti_data.get("otx_malware_families", []),
-            "mitre_attack": ti_data.get("mitre_attack", []),
+            "mitre_attack":         ti_data.get("mitre_attack", []),
         })
-        if ti_data.get("vt_malicious_count", 0) == 0:
-         payload["triage_note"] = (
-            f"IMPORTANT: VirusTotal shows 0 malicious detections. "
-            f"Final verdict is Clean. "
-            f"The RAG context above contains generic detection rules — "
-            f"they do NOT apply here since no engine flagged this file. "
-            f"threat_level MUST be 'low' or 'clean'. "
-            f"Summary must reflect that no threat was confirmed.")
+        vt_mal = ti_data.get("vt_malicious_count", 0)
+        fv     = str(final_verdict).strip().lower()
+        if vt_mal == 0:
+            payload["triage_note"] = (
+                "VirusTotal shows 0 malicious detections. "
+                "Final verdict is Clean. "
+                "The RAG context contains generic rules that do NOT apply here. "
+                "threat_level MUST be low or clean. "
+                "Write a clear summary: file analyzed by multiple AV engines, "
+                "no malicious behavior detected, file is considered benign, "
+                "no action required."
+            )
+        elif fv == "suspicious":
+            payload["triage_note"] = (
+                "Verdict TI = suspicious. "
+                "threat_level must be at most medium. "
+                "Avoid high/critical without explicit malicious evidence."
+            )
 
+    # ── DOMAIN ────────────────────────────────────────────
     elif ioc_type == "domain":
         payload.update({
             "vt_malicious_count": ti_data.get("vt_malicious_count", 0),
-            "vt_suspicious": ti_data.get("vt_suspicious", 0),
-            "vt_reputation": ti_data.get("vt_reputation", 0),
-            "global_risk_level": ti_data.get("global_risk_level", "unknown"),
-            "global_risk_score": ti_data.get("global_risk_score"),
-            "registrar": ti_data.get("registrar", "unknown"),
+            "vt_suspicious":      ti_data.get("vt_suspicious", 0),
+            "vt_reputation":      ti_data.get("vt_reputation", 0),
+            "global_risk_level":  ti_data.get("global_risk_level", "unknown"),
+            "global_risk_score":  ti_data.get("global_risk_score"),
+            "registrar":          ti_data.get("registrar", "unknown"),
         })
+        vt_mal = ti_data.get("vt_malicious_count", 0)
+        grs    = ti_data.get("global_risk_score") or 0
+        if vt_mal == 0 and grs <= 10:
+            payload["triage_note"] = (
+                "VirusTotal shows 0 malicious detections and global risk score is 0. "
+                "Final verdict is Clean. "
+                "threat_level MUST be low or clean. "
+                "Write a clear summary: domain has no known malicious association, "
+                "appears legitimate based on threat intelligence, no action required."
+            )
+
+    # ── URL ───────────────────────────────────────────────
     elif ioc_type == "url":
         payload.update({
             "vt_malicious_count": ti_data.get("vt_malicious_count", 0),
-            "vt_suspicious": ti_data.get("vt_suspicious", 0),
-            "vt_verdict": ti_data.get("vt_verdict", "unknown"),
-            "gsb_verdict": ti_data.get("gsb_verdict", "unknown"),
-            "phishtank_verdict": ti_data.get("phishtank_verdict", "unknown"),
-            "global_risk_level": ti_data.get("global_risk_level", "unknown"),
+            "vt_suspicious":      ti_data.get("vt_suspicious", 0),
+            "vt_verdict":         ti_data.get("vt_verdict", "unknown"),
+            "gsb_verdict":        ti_data.get("gsb_verdict", "unknown"),
+            "phishtank_verdict":  ti_data.get("phishtank_verdict", "unknown"),
+            "global_risk_level":  ti_data.get("global_risk_level", "unknown"),
         })
+        vt_mal = ti_data.get("vt_malicious_count", 0)
+        gsb    = str(ti_data.get("gsb_verdict", "")).lower()
+        if vt_mal == 0 and gsb != "malicious":
+            payload["triage_note"] = (
+                "VirusTotal shows 0 malicious detections and GSB verdict is clean. "
+                "threat_level MUST be low or clean. "
+                "Write a clear summary: URL has no confirmed malicious association "
+                "based on VirusTotal and Google Safe Browsing analysis."
+            )
+
+    # ── MAIL ──────────────────────────────────────────────
     elif ioc_type == "mail":
-        alerts = ti_data.get("mxtoolbox_alerts") or ti_data.get("alerts", [])
+        alerts       = ti_data.get("mxtoolbox_alerts") or ti_data.get("alerts", [])
+        spf_status   = _normalize_mail_auth_status(ti_data.get("spf", ""))
+        dmarc_status = _normalize_mail_auth_status(ti_data.get("dmarc", ""))
+        dkim_status  = _normalize_mail_auth_status(ti_data.get("dkim", ""))
+        score        = ti_data.get("score", ti_data.get("mxtoolbox_score", 0))
+        verdict      = ti_data.get("final_verdict", ti_data.get("mxtoolbox_verdict", "unknown"))
         payload.update({
-            "score": ti_data.get("score", 0),
-            "spf": ti_data.get("spf", "unknown"),
-            "dmarc": ti_data.get("dmarc", "unknown"),
-            "final_verdict": ti_data.get("final_verdict", "unknown"),
-            "alerts": alerts,
+            "score":         score,
+            "verdict":       verdict,
+            "spf":           spf_status,
+            "dmarc":         dmarc_status,
+            "dkim":          dkim_status,
+            "final_verdict": verdict,
+            "alerts":        alerts,
             "triage_note": (
-              "IMPORTANT: Base your analysis ONLY on the TI signals provided above. "
-              "Do NOT flag an email as malicious based on its name or domain appearance alone. "
-              f"MXToolbox score={ti_data.get('score', 0)}/100 — "
-              f"SPF={ti_data.get('spf', 'unknown')} — "
-              f"DMARC={ti_data.get('dmarc', 'unknown')} — "
-              f"alerts={len(alerts)} — "
-              f"verdict={ti_data.get('final_verdict', 'unknown')}. "
-              "If score >= 70 and alerts <= 3 and SPF/DMARC present → threat_level must be low or clean.")
+                "IMPORTANT TI-ONLY TRIAGE: use only factual TI fields. "
+                "Do NOT infer authentication failure unless explicitly stated in alerts. "
+                f"MXToolbox score={score}/100 — verdict={verdict} — "
+                f"SPF={spf_status} — DMARC={dmarc_status} — DKIM={dkim_status} — "
+                f"alerts={len(alerts)} — alerts_list={alerts}. "
+                "If score >= 70 and alerts <= 3 and SPF/DMARC present "
+                "then threat_level must be low or clean."
+            ),
         })
+
+    # ── CVE ───────────────────────────────────────────────
     elif ioc_type == "cve":
         payload.update({
-            "cvss_score": ti_data.get("cvss_score", "N/A"),
-            "severity": ti_data.get("severity", "unknown"),
+            "cvss_score":  ti_data.get("cvss_score", "N/A"),
+            "severity":    ti_data.get("severity", "unknown"),
             "description": ti_data.get("description", ""),
-            "cwe": ti_data.get("cwe", []),
+            "cwe":         ti_data.get("cwe", []),
         })
-
-
+    
     try:
         resp = requests.post(
             f"{LLM_API_URL}/enrich",
             json=payload,
-            timeout=180,
+            timeout=240,
             headers={
-                "Content-Type": "application/json",
+                "Content-Type":               "application/json",
                 "ngrok-skip-browser-warning": "true"
             }
         )
         resp.raise_for_status()
-        data = resp.json()
-        print(f"[DEBUG] Réponse brute de Colab : {json.dumps(data, indent=2)}")  # ← Ajoutez ceci
+         # ── Parsing robuste — Gemma retourne parfois du JSON incomplet ──
+        try:
+            data = resp.json()
+        except Exception:
+            # Tentative de récupération depuis le texte brut
+            import re
+            raw_text = resp.text
+            print(f"[DEBUG] Réponse brute (non-JSON) : {raw_text[:300]}")
+
+            # Cherche threat_level dans le texte brut
+            tl_match = re.search(r'"threat_level"\s*:\s*"(\w+)"', raw_text)
+            sc_match = re.search(r'"score"\s*:\s*(\d+)', raw_text)
+            su_match = re.search(r'"summary"\s*:\s*"([^"]+)"', raw_text)
+
+            if tl_match:
+                data = {
+                    "threat_level": tl_match.group(1),
+                    "score":        int(sc_match.group(1)) if sc_match else 50,
+                    "summary":      su_match.group(1) if su_match else "Analysis based on TI signals.",
+                    "tags":         [],
+                    "recommandation": "Investigate further.",
+                }
+            else:
+                return _fallback(ti_data, reason="réponse Colab non parseable")
+
+        # Vérifie que threat_level est présent et non vide
+        if not data.get("threat_level"):
+            print(f"[DEBUG] threat_level manquant dans réponse Colab : {data}")
+            return _fallback(ti_data, reason="threat_level absent dans réponse LLM")
+
+        print(f"[DEBUG] Réponse Colab parsée : {json.dumps(data, indent=2)}")
         data["rag_used"] = True
         return data
 
     except requests.exceptions.Timeout:
-        return _fallback(ti_data, reason="timeout 180s")
+        return _fallback(ti_data, reason="timeout 240s")
     except requests.exceptions.ConnectionError:
         return _fallback(ti_data, reason="Colab/ngrok inaccessible")
     except Exception as e:

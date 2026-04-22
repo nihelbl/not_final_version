@@ -20,7 +20,7 @@ def detect_type(indicator: str) -> str:
         return 'ip'
     if re.match(r'^CVE-\d{4}-\d{4,}$', indicator.upper()):
         return 'cve'
-    if re.match(r'^[a-fA-F0-9]{32}$|^[a-fA-F0-9]{40}$|^[a-fA-F0-9]{63,64}$', indicator):
+    if re.match(r'^[a-fA-F0-9]{32}$|^[a-fA-F0-9]{40}$|^[a-fA-F0-9]{64}$', indicator):
         return 'hash'
     if re.match(r'^https?://', indicator):
         return 'url'

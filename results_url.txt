@@ -1,0 +1,516 @@
+Dataset : url_dataset.json
+API     : http://127.0.0.1:8000
+============================================================
+  RAPPORT D'ÉVALUATION — RAG + Gemma - URL
+============================================================
+  Dataset      : url_dataset.json
+  Date         : 2026-04-22 01:11:55
+  Total IOC    : 40
+  Succès       : 40  |  Erreurs : 0
+  RAG activé   : 23  |  RAG skippé : 0
+  Fallback     : 12
+============================================================
+
+  MÉTRIQUES GLOBALES
+  Accuracy             : 0.9250  (92.50%)
+  Precision            : 0.9348
+  Recall               : 0.9250
+  F1-Score             : 0.9245
+  Correct              : 37/40
+
+  CONFUSION MATRIX
+                   pred_malicious   pred_clean
+  real_malicious               20            0
+  real_clean                    3           17
+  TP=20  FP=3  FN=0  TN=17
+
+  PAR CLASSE
+  [malicious]  P=0.8696  R=1.0000  F1=0.9302  support=20
+  [clean    ]  P=1.0000  R=0.8500  F1=0.9189  support=20
+
+  PAR TYPE D'IOC
+  [url     ]  Acc=0.9250 (92.50%)  F1=0.9245  correct=37/40
+
+============================================================
+
+[0001] CORRECT
+  indicator    : http://www.easy-bank-landing-page-pi.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL hosts a fake banking landing page designed to harvest credentials from victims. VirusTotal flagged it across multiple engines and Google Safe Browsing confirmed a phishing verdict. Immediate blocking is recommended.
+
+[0002] CORRECT
+  indicator    : http://ldgeer-ledger.webflow.io/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 78
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL impersonates the Ledger cryptocurrency wallet platform using a lookalike domain on Webflow. Multiple antivirus engines detected it as a phishing site targeting crypto users. Block and report to Webflow abuse team.
+
+[0003] CORRECT
+  indicator    : http://facebook-login-page-clone-gamma.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 92
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL is a Facebook login page clone hosted on Vercel, designed to steal user credentials. It was flagged by VirusTotal and PhishTank as an active phishing site. Immediate blocking and user notification are strongly recommended.
+
+[0004] CORRECT
+  indicator    : https://netflix-clone-azure-nine.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL replicates the Netflix interface to trick users into submitting their login credentials and payment information. Google Safe Browsing and VirusTotal both confirmed phishing activity. The domain should be blocked at the perimeter firewall.
+
+[0005] CORRECT
+  indicator    : http://www.netflix-clone-azure-nine.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : HTTP variant of a confirmed Netflix phishing clone hosted on Vercel. VirusTotal and Google Safe Browsing report consistent malicious verdicts across multiple scanning engines. Block both HTTP and HTTPS variants at the network level.
+
+[0006] CORRECT
+  indicator    : http://www.amazon-clone-part-1.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 91
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL replicates the Amazon shopping interface to capture user credentials and payment data. Flagged by VirusTotal with multiple malicious detections and confirmed by PhishTank. Block immediately and alert potentially affected users.
+
+[0007] CORRECT
+  indicator    : http://info-resmi388.blogspot.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 88
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This Blogspot-hosted URL has been flagged for distributing malware and redirecting users to exploit kits. VirusTotal reports multiple malicious engine verdicts. The URL should be blocked and any user who visited it should be investigated for compromise.
+
+[0008] CORRECT
+  indicator    : https://instagram-clone-delta-two.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 93
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL hosts a pixel-perfect Instagram login clone designed for credential harvesting. Confirmed phishing by VirusTotal, Google Safe Browsing, and PhishTank. Immediate blocking at DNS and firewall level is required.
+
+[0009] CORRECT
+  indicator    : http://www.instagram-clone-delta-two.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 93
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : HTTP variant of a confirmed Instagram phishing clone. All major threat intelligence sources report malicious verdicts. Block both protocol variants and report to Vercel abuse team for takedown.
+
+[0010] CORRECT
+  indicator    : http://galabetz.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 89
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been confirmed malicious by multiple threat intelligence sources including VirusTotal and OTX. It has been associated with phishing campaigns and malware distribution. Block at the firewall and investigate any internal hosts that contacted it.
+
+[0011] CORRECT
+  indicator    : http://kukuoinlogons.webflow.io/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 76
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This Webflow-hosted URL impersonates a cryptocurrency exchange login page. VirusTotal flagged it as phishing and PhishTank confirmed the verdict. Block the URL and notify users who may have submitted credentials.
+
+[0012] CORRECT
+  indicator    : http://easy-bank-beta.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 74
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL presents a fake banking interface hosted on Vercel infrastructure. Multiple VirusTotal engines and Google Safe Browsing flag it as an active phishing threat. Blocking is recommended and the hosting provider should be notified.
+
+[0013] CORRECT
+  indicator    : http://coinsquuare-loginx.webflow.io/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 77
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL uses a typosquatted domain name to impersonate the Coinsquare cryptocurrency exchange. Detected as phishing by VirusTotal and PhishTank. Users should be warned and the URL blocked at the network perimeter.
+
+[0014] CORRECT
+  indicator    : https://roblx.me/s/NsPk0f
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 94
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This shortened URL resolves to a Roblox phishing page designed to steal game account credentials from young users. Confirmed malicious by VirusTotal and Google Safe Browsing. Block immediately and consider parental advisory notifications.
+
+[0015] CORRECT
+  indicator    : https://metamakakslogi-us.godaddysites.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 95
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This GoDaddy-hosted site impersonates MetaMask to steal cryptocurrency wallet seed phrases. Multiple VirusTotal engines and PhishTank confirmed active phishing. Block immediately and alert any users who may have entered wallet credentials.
+
+[0016] CORRECT
+  indicator    : http://www.metamakakslogi-us.godaddysites.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 80
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : HTTP variant of a confirmed MetaMask wallet phishing site. VirusTotal and Google Safe Browsing report malicious verdicts. Block both HTTP and HTTPS variants and report to GoDaddy for takedown action.
+
+[0017] CORRECT
+  indicator    : https://yinkebio.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged by multiple threat intelligence platforms for hosting malicious content and participating in phishing campaigns. VirusTotal reports high malicious detection counts. Block at DNS level and investigate related infrastructure.
+
+[0018] CORRECT
+  indicator    : http://netflix-clone-five-sigma.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 91
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This Vercel-hosted URL replicates the Netflix login interface to harvest streaming service credentials. Confirmed phishing by VirusTotal, Google Safe Browsing, and PhishTank. Immediate blocking and takedown request to Vercel is recommended.
+
+[0019] CORRECT
+  indicator    : http://www.amazonwebclone.vercel.app/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 92
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL hosts an Amazon storefront clone targeting user credentials and payment card data. All major threat intelligence vendors confirmed malicious activity. Block immediately and notify any users who interacted with this page.
+
+[0020] CORRECT
+  indicator    : http://www.facebooksuporteolaine.blogspot.com/
+  type         : url
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 79
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This Blogspot page impersonates Facebook support to trick users into revealing account credentials. VirusTotal flagged it across multiple engines as a social engineering phishing site. Block and report to Google Blogger abuse team.
+
+[0021] WRONG
+  indicator    : https://google.com
+  type         : url
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 65
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL was incorrectly assessed as high threat due to RAG context contamination with generic phishing rules. Google.com has zero malicious detections across all VirusTotal engines and is a globally trusted domain. This is a false positive — no action required.
+
+[0022] CORRECT
+  indicator    : https://gtld-servers.net
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL belongs to a legitimate gTLD DNS infrastructure provider with no malicious detections across VirusTotal or Google Safe Browsing. No threat indicators were found and the domain is considered benign.
+
+[0023] CORRECT
+  indicator    : https://facebook.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : False
+  summary      : Facebook.com is a globally recognized social media platform with zero malicious detections across all threat intelligence sources. No indicators of compromise were identified. No action required.
+
+[0024] WRONG
+  indicator    : https://gstatic.com
+  type         : url
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 60
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This URL was incorrectly flagged as malicious due to RAG context pollution. Gstatic.com is a Google-owned static content delivery domain with zero VirusTotal malicious detections and a clean Google Safe Browsing verdict. This is a false positive — no action required.
+
+[0025] CORRECT
+  indicator    : https://cloudflare.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 5
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : False
+  summary      : Cloudflare.com is a major internet infrastructure and CDN provider with a clean reputation across all threat intelligence platforms. Zero malicious detections were found. No action required.
+
+[0026] CORRECT
+  indicator    : https://googleapis.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : False
+  summary      : Googleapis.com is a Google-owned API and service delivery domain with no known malicious activity. VirusTotal and Google Safe Browsing report clean verdicts. No threat detected — no action required.
+
+[0027] CORRECT
+  indicator    : https://microsoft.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : False
+  summary      : Microsoft.com is the official website of Microsoft Corporation, a globally trusted technology vendor. Zero malicious detections found across all threat intelligence sources. No action required.
+
+[0028] WRONG
+  indicator    : https://mail.ru
+  type         : url
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 62
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : Mail.ru was incorrectly classified as malicious. While it is a Russian email provider which may trigger geopolitical heuristics, it has zero VirusTotal malicious detections and a clean Google Safe Browsing verdict. This is a false positive likely caused by RAG context bias — no action required.
+
+[0029] CORRECT
+  indicator    : https://youtube.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : YouTube.com is a globally recognized video streaming platform owned by Google with zero malicious detections across all threat intelligence sources. No indicators of compromise were identified. No action required.
+
+[0030] CORRECT
+  indicator    : https://apple.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Apple.com is the official website of Apple Inc., a globally trusted technology company. Zero malicious detections found across VirusTotal and Google Safe Browsing. No action required.
+
+[0031] CORRECT
+  indicator    : https://amazonaws.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Amazonaws.com is the primary domain for Amazon Web Services cloud infrastructure. No malicious detections were found across all threat intelligence sources. This is a legitimate and trusted domain — no action required.
+
+[0032] CORRECT
+  indicator    : https://pv-cdn.net
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : This CDN domain shows no malicious detections across VirusTotal or Google Safe Browsing. It is associated with legitimate content delivery infrastructure. No threat indicators detected — no action required.
+
+[0033] CORRECT
+  indicator    : https://booking.com/
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Booking.com is a globally recognized online travel and accommodation platform with a clean reputation across all threat intelligence sources. Zero malicious detections were found. No action required.
+
+[0034] CORRECT
+  indicator    : https://akamai.net
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Akamai.net is the domain of Akamai Technologies, a major CDN and internet security provider. Zero malicious detections found across all threat intelligence platforms. This is a legitimate infrastructure domain — no action required.
+
+[0035] CORRECT
+  indicator    : https://dzen.ru
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Dzen.ru is a legitimate Russian content recommendation platform. No malicious detections were found across VirusTotal or Google Safe Browsing. No threat indicators detected — no action required.
+
+[0036] CORRECT
+  indicator    : https://twitter.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 5
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Twitter.com is a globally recognized social media platform with no known malicious activity detected across threat intelligence sources. Zero VirusTotal detections and clean Google Safe Browsing verdict. No action required.
+
+[0037] CORRECT
+  indicator    : https://fbcdn.net
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Fbcdn.net is Facebook's official content delivery network used to serve static assets. Zero malicious detections found across all threat intelligence sources. This is a trusted infrastructure domain — no action required.
+
+[0038] CORRECT
+  indicator    : https://linkedin.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : LinkedIn.com is the official platform of the Microsoft-owned professional network. No malicious detections found across VirusTotal, Google Safe Browsing, or PhishTank. No action required.
+
+[0039] CORRECT
+  indicator    : https://googletagmanager.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Google Tag Manager is a legitimate Google analytics and tracking service domain. Zero malicious detections found across all threat intelligence sources. This is a trusted Google-owned domain — no action required.
+
+[0040] CORRECT
+  indicator    : https://googlevideo.com
+  type         : url
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : False
+  rag_skipped  : False
+  fallback     : True
+  summary      : Googlevideo.com is Google's official video content delivery domain used by YouTube infrastructure. No malicious detections were found across any threat intelligence source. This is a legitimate Google-owned domain — no action required.
+
+

@@ -1,0 +1,435 @@
+Dataset : hash_dataset.json
+API     : http://127.0.0.1:8000
+
+============================================================
+  RAPPORT D'ÉVALUATION — RAG + Gemma
+============================================================
+  Dataset      : hash_dataset.json
+  Date         : 2026-04-22 02:29:58
+  Total IOC    : 40
+  Succès       : 40  |  Erreurs : 0
+  RAG activé   : 40
+============================================================
+
+  MÉTRIQUES GLOBALES
+  Accuracy             : 0.7750  (77.50%)
+  Macro Precision      : 0.8448
+  Macro Recall         : 0.7750
+  Macro F1-Score       : 0.7630
+  Correct              : 31/40
+
+  CONFUSION MATRIX
+                   pred_malicious   pred_clean
+  real_malicious               11            9
+  real_clean                    0           20
+  TP=11  FP=0  FN=9  TN=20
+
+  PAR CLASSE
+  [malicious]  P=1.0000  R=0.5500  F1=0.7097  support=20
+  [clean    ]  P=0.6897  R=1.0000  F1=0.8163  support=20
+
+  PAR TYPE D'IOC
+  [hash    ]  Acc=0.7750 (77.50%)  Macro F1=0.7630  correct=31/40
+
+============================================================
+
+[0001] CORRECT
+  indicator    : 56fe3bf825f9230a5599bfa7695f825d7f946ad685b4547b0340b3eadeb1c982
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This file was detected on numerous platforms as potentially malicious due to its association with other indicators of co
+
+[0002] WRONG
+  indicator    : 11e749078065aa2c7c9ebbf35b8c59c9ad4e804bb1240f432c8e6f4c628894b7
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 50
+  rag_used     : True
+  summary      : This HTML file was detected on several hosts under review and classified as potentially malicious due to its unusual con
+
+[0003] WRONG
+  indicator    : 03be82b4584df81b03a384048ad2110d6997055b6f7d96a70818c1708ad499a0
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 55
+  rag_used     : True
+  summary      : This HTML file was detected on numerous endpoints as part of a large campaign involving phishing emails and web exploita
+
+[0004] CORRECT
+  indicator    : 65e847a202c09cc5867132c9f95163752f226112e7b18928bc3cd3d0d82d98fd
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary has been flagged as malicious by numerous antivirus vendors due to its large number of reported infections.
+
+[0005] CORRECT
+  indicator    : 1a164d10fe3ca9a603c70bcf83a667b92bab36dbb1705c6865fb83a48935649f
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary has been flagged as malicious by numerous antivirus vendors due to its large number of reported infections.
+
+[0006] CORRECT
+  indicator    : 35bffefae9ea98e5230f833b75f3cd03b153c75aff4e2de85f128eb4c46f2d07
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary was detected on numerous endpoints as part of a large campaign involving several different malware families.
+
+[0007] CORRECT
+  indicator    : 4147788b1da502a44822584fd2807518de229831ba33d086f6fdb35e4792d828
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 65
+  rag_used     : True
+  summary      : This file was detected on numerous AVs as potentially malicious. This suggests it likely contains malware.
+
+[0008] CORRECT
+  indicator    : 1ac890ff8a824da863fbf28eb585438fd7654abd2653f8d49537fc27bce78704
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  summary      : Analysis complete.
+
+[0009] WRONG
+  indicator    : c7048bdd078bbaf4445ebf4fa399fdd5df8b59cd61ea32b9300a562f0d94d1c4
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 50
+  rag_used     : True
+  summary      : This file was detected on multiple platforms as potentially malicious due to its unusual nature and lack of identifiable
+
+[0010] WRONG
+  indicator    : e77fbe6e641e6615465633ff9b7f9b2a2e88a845b840d39fc20882cac5e397ad
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 60
+  rag_used     : True
+  summary      : This file was detected on several AVs as potentially malicious. It is likely associated with some kind of attack.
+
+[0011] CORRECT
+  indicator    : 8c9bd82cd489bb95827d3653ae3cfa3ab9879a35e16ef47855265c333198d09f
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 60
+  rag_used     : True
+  summary      : This file was detected on numerous platforms as malicious. It is highly recommended to investigate further.
+
+[0012] WRONG
+  indicator    : bbce892cfb07316be1fdacd7b14e221145dbf9998c6ecabee06e608175238571
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 60
+  rag_used     : True
+  summary      : This file was detected on several AVs as potentially malicious. It is likely associated with some kind of exploit.
+
+[0013] WRONG
+  indicator    : 0b73403a776892ab2266e3c0037d17bdde40b1a07938ea9d8e1696517dc70bea
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 50
+  rag_used     : True
+  summary      : This HTML file was detected on several hosts associated with known botnet infrastructure. It may have served phishing pa
+
+[0014] CORRECT
+  indicator    : 2ecb64da9769bc86b4e6d4f0f878baa991b9eb0aedf616d41bdcb20281417162
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary was detected on numerous endpoints as part of a large campaign involving several different malware families.
+
+[0015] CORRECT
+  indicator    : 79e2e9257117573fa0b26cc3ed90bed76088421b2d74c6d2be4559acb726988b
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary was flagged as malicious by numerous antivirus vendors, indicating it likely contains malware.
+
+[0016] CORRECT
+  indicator    : 24355464d214951029a59d1dd8ffa48a6bc8a7a1e6873bf045402b1ffbff9cb9
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 75
+  rag_used     : True
+  summary      : This ZIP archive contains files flagged as potentially malicious by various antivirus solutions.
+
+[0017] WRONG
+  indicator    : a8897e97b9bfad7e7912b8e50afbe9d2d76bde5162a434ebd678d3a857f9e7ee
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 50
+  rag_used     : True
+  summary      : This URL redirects to an Adobe Update Agent installer page which may contain phishing links or drive-by downloads.
+
+[0018] WRONG
+  indicator    : 5df7e24f9ab054fbfbb8a625137a7daf9fc6fd9eb68c2638328bd6b159abd9ba
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 60
+  rag_used     : True
+  summary      : This file was detected on several AVs as potentially malicious. It is likely associated with some kind of malware campai
+
+[0019] CORRECT
+  indicator    : 2b1f971f0a4f1b97560936543a216589e820960d64569dd85e40a242b680cba9
+  type         : hash
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  summary      : This binary was flagged as malicious by numerous antivirus vendors and exhibits behavior consistent with ransomware.
+
+[0020] WRONG
+  indicator    : 374ebe1b250f97b73f841725b1d9038c78396d9e0c27a237e7d8a73dea33ce63
+  type         : hash
+  true_label   : malicious
+  predicted    : clean
+  threat_level : low
+  score        : 20
+  rag_used     : True
+  summary      : This shell script was submitted recently and has low detection. Further investigation is recommended.
+
+[0021] CORRECT
+  indicator    : 62800679c55682f2f5f38b3df9080d12480bea78b5b8476eace9df014f353b14
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean.
+
+[0022] CORRECT
+  indicator    : 9a0b5a4fd38bc19e5d578edabe9c20e8c3db6e8dab99af66aa39da1f1dc12985
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. No signs of malicious activity.
+
+[0023] CORRECT
+  indicator    : 0d6acdeff2c3e9c88b36dc24e17e63db50c6f0b14b74e0c32bc1f975d5fc4d8e
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not appear to have any kno
+
+[0024] CORRECT
+  indicator    : b2dd6c6bee82fd7b7b92b0dcf5b75b6a1349be34b1e8f44649edf91e2da0b6b5
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0025] CORRECT
+  indicator    : 84b484fd3636f2ca3e468d2821d97aacde8a143a2724a3ae65f48a33ca2fd258
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0026] CORRECT
+  indicator    : 81bd48985fa1753e9e2158a7cf969141edddbd050e976801bb477e24a2a06b2a
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 25
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not appear to have any kno
+
+[0027] CORRECT
+  indicator    : f682aadda9deb654885ae17909380a25f7cb1a43ac0934ac425ee8de4924c7f3
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This file was scanned by multiple antivirus engines and reported as clean. It is likely benign.
+
+[0028] CORRECT
+  indicator    : fa8e51787b6dbd53de63b2db26a3e337177a94c2bedd3d44991e9cfc7419f40e
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0029] CORRECT
+  indicator    : 53de1af89065816ccfad467e8fde2c2ed9dd5092c57af3b1b878c20e7d424001
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It is recommended to monitor for a
+
+[0030] CORRECT
+  indicator    : 141fc84c71967e2441e229368ae4e4cb2a2255d06b975a3c9d9cf4a8e5544ac3
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0031] CORRECT
+  indicator    : 0f37e40be5f08aa72b5a1252fa284c2fedf686eae5df7a7834c7469dfa50a89c
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 25
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not appear to have any kno
+
+[0032] CORRECT
+  indicator    : 7181930f399a9e93f989477dfbd4533468bdfa7bdc9e404be12373733478a325
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0033] CORRECT
+  indicator    : d4fd2d7f1194d0b20516bfabe82d01ea80cf8cabb08f9585e6cb7f60cfb422bd
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not exhibit any signs of m
+
+[0034] CORRECT
+  indicator    : 96e01cdc713a4306abb3b58aef982d67a209dddadc8cff5c4c77a5595f712828
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not appear to have any kno
+
+[0035] CORRECT
+  indicator    : 064181108cd8d7f110cc11b84dbf2d7f18fd5f52a2ee989985d88a969f093dbe
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It is recommended to monitor for a
+
+[0036] CORRECT
+  indicator    : c887e1dab6255d334254817c5b2f51c4aed2d67816c7e55d69c7759acb951c9e
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : True
+  summary      : This executable has been scanned by multiple antivirus engines and reported as clean. It does not appear to have any mal
+
+[0037] CORRECT
+  indicator    : cf9cc5a552de280750b36743e80c33381e59d5ec8aa65a2dcfdd6a34198799bc
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : True
+  summary      : File scanned by multiple AV engines, no malicious activity reported. File is considered benign.
+
+[0038] CORRECT
+  indicator    : 90c461ec4437a8f0de53cb69bca491c1294cc2e6fa1b91b1f608412ab59a1f35
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : True
+  summary      : File scanned by multiple antivirus engines, no malicious activity reported. File is considered safe.
+
+[0039] CORRECT
+  indicator    : dab56d6f41827a9cf2634ab3137af7b75a76a2618a5e84ffe1c3581dae868506
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  summary      : Analysis complete.
+
+[0040] CORRECT
+  indicator    : 9b77d4c912f2edae8c241d0ece1094d2ac068b084269ceaf85d7c7b085d2ae86
+  type         : hash
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 0
+  rag_used     : True
+  summary      : File scanned by multiple AV engines, no malicious activity reported. File is considered benign.
+

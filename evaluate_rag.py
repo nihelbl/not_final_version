@@ -2,22 +2,23 @@ import argparse
 import json
 import time
 import requests
+import os
 from datetime import datetime
 from collections import defaultdict
-from report import print_ioc_report
+
+try:
+    from report import print_ioc_report
+    HAS_REPORT = True
+except ImportError:
+    HAS_REPORT = False
 
 # ──────────────────────────────────────────────
 # CONFIG
 # ──────────────────────────────────────────────
 
-# Délai entre chaque requête (évite le rate-limiting ngrok)
-DELAY_BETWEEN_REQUESTS = 1.5  # secondes
+DELAY_BETWEEN_REQUESTS = 1.5
+REQUEST_TIMEOUT        = 600
 
-# Timeout par requête vers l'API
-REQUEST_TIMEOUT = 600  # secondes
-
-# Mapping threat_level → label binaire
-# Ajuste "medium" selon tes résultats : met-le dans "malicious" si ton modèle est agressif
 THREAT_LEVEL_TO_LABEL = {
     "critical": "malicious",
     "high":     "malicious",
@@ -25,104 +26,71 @@ THREAT_LEVEL_TO_LABEL = {
     "spam":     "malicious",
     "low":      "clean",
     "clean":    "clean",
-    "unknown":  "clean",      
+    "unknown":  "clean",
 }
 
 
 # ──────────────────────────────────────────────
-# APPEL API AVEC FORCE_RAG
+# APPEL API
 # ──────────────────────────────────────────────
 
 def call_api_force_rag(indicator: str, ioc_type: str, api_url: str) -> dict:
-    """
-    Appelle l'endpoint /analyze en forçant le passage par RAG.
-    On contourne rag_gate en appelant directement /enrich avec rag_force=true,
-    ou en passant par /analyze?force_rag=true si tu l'as implémenté.
-
-    Si ton API ne supporte pas force_rag, on appelle /analyze normalement
-    et on note si RAG a été utilisé ou non dans les résultats.
-    """
-    payload = {"indicator": indicator}
-
     try:
-        # Tentative 1 : avec paramètre force_rag (si implémenté dans ton router)
         resp = requests.post(
             f"{api_url}/ioc/analyze",
-            json=payload,
+            json={"indicator": indicator},
             params={"force_rag": "true"},
             timeout=REQUEST_TIMEOUT,
             headers={
-                "Content-Type": "application/json",
+                "Content-Type":               "application/json",
                 "ngrok-skip-browser-warning": "true"
             }
         )
         resp.raise_for_status()
         return resp.json()
-
     except Exception as e:
         return {"error": str(e)}
 
 
 # ──────────────────────────────────────────────
-# MAPPING VERDICT → LABEL BINAIRE
+# MAPPING VERDICT
 # ──────────────────────────────────────────────
 
 def map_threat_level(threat_level: str, ioc_type: str = "") -> str:
     tl = (threat_level or "").lower().strip()
-    
-    # Hash et email : medium = clean (signaux ambigus)
     if ioc_type in ("hash", "mail", "email"):
         return "malicious" if tl in ("critical", "high") else "clean"
-    
-    # IP, domain, URL : medium = malicious (signaux plus fiables)
     return "malicious" if tl in ("critical", "high", "medium") else "clean"
 
 
-def extract_prediction(api_response: dict) -> tuple[str, str, bool, bool]:
-    """
-    Extrait depuis la réponse API :
-      - threat_level brut
-      - label prédit (malicious/clean)
-      - rag_used : True si RAG a été activé
-      - fallback : True si le LLM a utilisé le fallback à base de règles
-    """
-    llm = api_response.get("llm_analysis", {})
+def extract_prediction(api_response: dict):
+    llm          = api_response.get("llm_analysis", {})
     threat_level = llm.get("threat_level", "unknown")
     rag_used     = llm.get("rag_used", False)
     fallback     = llm.get("fallback", False)
     rag_skipped  = llm.get("rag_skipped", False)
-
-    predicted_label = map_threat_level(threat_level)
-    return threat_level, predicted_label, rag_used, fallback, rag_skipped
+    predicted    = map_threat_level(threat_level)
+    return threat_level, predicted, rag_used, fallback, rag_skipped
 
 
 # ──────────────────────────────────────────────
-# CALCUL DES MÉTRIQUES
+# MÉTRIQUES
 # ──────────────────────────────────────────────
 
-def compute_metrics(y_true: list[str], y_pred: list[str]) -> dict:
-    """
-    Calcule Accuracy, Precision, Recall, F1 pour chaque classe + macro.
-    Classes : malicious / clean
-    """
+def compute_metrics(y_true: list, y_pred: list) -> dict:
     classes = ["malicious", "clean"]
-    metrics = {}
-
-    total = len(y_true)
+    total   = len(y_true)
     correct = sum(1 for t, p in zip(y_true, y_pred) if t == p)
     accuracy = correct / total if total > 0 else 0.0
 
-    # Par classe
     per_class = {}
     for cls in classes:
         tp = sum(1 for t, p in zip(y_true, y_pred) if t == cls and p == cls)
         fp = sum(1 for t, p in zip(y_true, y_pred) if t != cls and p == cls)
         fn = sum(1 for t, p in zip(y_true, y_pred) if t == cls and p != cls)
-
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall    = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         f1        = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-
         per_class[cls] = {
             "precision": round(precision, 4),
             "recall":    round(recall, 4),
@@ -131,74 +99,162 @@ def compute_metrics(y_true: list[str], y_pred: list[str]) -> dict:
             "support": sum(1 for t in y_true if t == cls)
         }
 
-    # Macro (moyenne simple sur les classes)
-    macro_precision = sum(per_class[c]["precision"] for c in classes) / len(classes)
-    macro_recall    = sum(per_class[c]["recall"]    for c in classes) / len(classes)
-    macro_f1        = sum(per_class[c]["f1"]        for c in classes) / len(classes)
+    macro_p  = sum(per_class[c]["precision"] for c in classes) / len(classes)
+    macro_r  = sum(per_class[c]["recall"]    for c in classes) / len(classes)
+    macro_f1 = sum(per_class[c]["f1"]        for c in classes) / len(classes)
 
-    metrics = {
+    return {
         "accuracy":        round(accuracy, 4),
-        "macro_precision": round(macro_precision, 4),
-        "macro_recall":    round(macro_recall, 4),
+        "macro_precision": round(macro_p, 4),
+        "macro_recall":    round(macro_r, 4),
         "macro_f1":        round(macro_f1, 4),
         "per_class":       per_class,
+        "total":           total,
+        "correct":         correct,
     }
-    return metrics
 
 
-def compute_metrics_by_type(results: list[dict]) -> dict:
-    """Calcule les métriques séparément pour chaque type d'IOC."""
+def compute_metrics_by_type(results: list) -> dict:
     by_type = defaultdict(lambda: {"y_true": [], "y_pred": []})
-
     for r in results:
         if r.get("status") == "success":
             t = r["ioc_type"]
             by_type[t]["y_true"].append(r["true_label"])
             by_type[t]["y_pred"].append(r["predicted_label"])
-
-    metrics_by_type = {}
-    for ioc_type, data in by_type.items():
-        metrics_by_type[ioc_type] = compute_metrics(data["y_true"], data["y_pred"])
-
-    return metrics_by_type
+    return {
+        ioc_type: compute_metrics(data["y_true"], data["y_pred"])
+        for ioc_type, data in by_type.items()
+    }
 
 
 # ──────────────────────────────────────────────
-# CONFUSION MATRIX (affichage texte)
+# SAUVEGARDE PAR IOC (fichier texte)
 # ──────────────────────────────────────────────
 
-def print_confusion_matrix(y_true: list[str], y_pred: list[str]):
-    classes = ["malicious", "clean"]
-    matrix = [[0, 0], [0, 0]]
+def save_ioc_result_txt(
+    txt_path: str,
+    idx: int,
+    indicator: str,
+    ioc_type: str,
+    true_label: str,
+    predicted_label: str,
+    threat_level: str,
+    rag_used: bool,
+    fallback: bool,
+    rag_skipped: bool,
+    api_response: dict,
+):
+    """Ajoute une ligne détaillée par IOC dans le fichier texte de résultats."""
+    llm     = api_response.get("llm_analysis", {})
+    correct = predicted_label == true_label
+    status  = "CORRECT" if correct else "WRONG"
+    summary = (llm.get("summary") or "").replace("\n", " ").strip()
+    score   = llm.get("score", "N/A")
 
+    with open(txt_path, "a", encoding="utf-8") as f:
+        f.write(f"[{idx:04d}] {status}\n")
+        f.write(f"  indicator    : {indicator}\n")
+        f.write(f"  type         : {ioc_type}\n")
+        f.write(f"  true_label   : {true_label}\n")
+        f.write(f"  predicted    : {predicted_label}\n")
+        f.write(f"  threat_level : {threat_level}\n")
+        f.write(f"  score        : {score}\n")
+        f.write(f"  rag_used     : {rag_used}\n")
+        f.write(f"  rag_skipped  : {rag_skipped}\n")
+        f.write(f"  fallback     : {fallback}\n")
+        f.write(f"  summary      : {summary[:120]}\n")
+        f.write("\n")
+
+
+def save_summary_txt(
+    txt_path: str,
+    metrics: dict,
+    metrics_by_type: dict,
+    stats: dict,
+    dataset_path: str,
+    y_true: list,
+    y_pred: list,
+):
+    """Ajoute le bloc de métriques globales à la fin du fichier texte."""
+    sep = "=" * 60
+
+    # Confusion matrix
+    matrix    = [[0, 0], [0, 0]]
     label_idx = {"malicious": 0, "clean": 1}
     for t, p in zip(y_true, y_pred):
         i = label_idx.get(t, 1)
         j = label_idx.get(p, 1)
         matrix[i][j] += 1
+    tp = matrix[0][0]; fp = matrix[1][0]
+    fn = matrix[0][1]; tn = matrix[1][1]
 
-    print("\n  Confusion Matrix (lignes=réel, colonnes=prédit)")
+    with open(txt_path, "a", encoding="utf-8") as f:
+        f.write(f"\n{sep}\n")
+        f.write(f"  RAPPORT D'ÉVALUATION — RAG + Gemma\n")
+        f.write(f"{sep}\n")
+        f.write(f"  Dataset      : {dataset_path}\n")
+        f.write(f"  Date         : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"  Total IOC    : {stats['total']}\n")
+        f.write(f"  Succès       : {stats['success']}  |  Erreurs : {stats['errors']}\n")
+        f.write(f"  RAG activé   : {stats['rag_used']}  |  RAG skippé : {stats['rag_skipped']}\n")
+        f.write(f"  Fallback     : {stats['fallback']}\n")
+        f.write(f"{sep}\n\n")
+
+        f.write(f"  MÉTRIQUES GLOBALES\n")
+        f.write(f"  {'Accuracy'  :20} : {metrics['accuracy']:.4f}  ({metrics['accuracy']*100:.2f}%)\n")
+        f.write(f"  {'Precision' :20} : {metrics['macro_precision']:.4f}\n")
+        f.write(f"  {'Recall'    :20} : {metrics['macro_recall']:.4f}\n")
+        f.write(f"  {'F1-Score'  :20} : {metrics['macro_f1']:.4f}\n")
+        f.write(f"  {'Correct'   :20} : {metrics['correct']}/{metrics['total']}\n\n")
+
+        f.write(f"  CONFUSION MATRIX\n")
+        f.write(f"  {'':15} {'pred_malicious':>15} {'pred_clean':>12}\n")
+        f.write(f"  {'real_malicious':15} {tp:>15} {fn:>12}\n")
+        f.write(f"  {'real_clean':15} {fp:>15} {tn:>12}\n")
+        f.write(f"  TP={tp}  FP={fp}  FN={fn}  TN={tn}\n\n")
+
+        f.write(f"  PAR CLASSE\n")
+        for cls, m in metrics["per_class"].items():
+            f.write(
+                f"  [{cls:9}]  P={m['precision']:.4f}  R={m['recall']:.4f}  "
+                f"F1={m['f1']:.4f}  support={m['support']}\n"
+            )
+
+        f.write(f"\n  PAR TYPE D'IOC\n")
+        for ioc_type, m in metrics_by_type.items():
+            f.write(
+                f"  [{ioc_type:8}]  Acc={m['accuracy']:.4f} ({m['accuracy']*100:.2f}%)  "
+                f"F1={m['macro_f1']:.4f}  "
+                f"correct={m['correct']}/{m['total']}\n"
+            )
+
+        f.write(f"\n{sep}\n\n")
+
+
+# ──────────────────────────────────────────────
+# AFFICHAGE CONSOLE
+# ──────────────────────────────────────────────
+
+def print_confusion_matrix(y_true: list, y_pred: list):
+    matrix    = [[0, 0], [0, 0]]
+    label_idx = {"malicious": 0, "clean": 1}
+    for t, p in zip(y_true, y_pred):
+        i = label_idx.get(t, 1)
+        j = label_idx.get(p, 1)
+        matrix[i][j] += 1
+    print("\n  Confusion Matrix")
     print(f"  {'':15} {'malicious':>12} {'clean':>10}")
-    for i, cls in enumerate(classes):
+    for i, cls in enumerate(["malicious", "clean"]):
         print(f"  {cls:15} {matrix[i][0]:>12} {matrix[i][1]:>10}")
-
-    tn = matrix[1][1]
-    fp = matrix[1][0]
-    fn = matrix[0][1]
-    tp = matrix[0][0]
+    tp = matrix[0][0]; fp = matrix[1][0]; fn = matrix[0][1]; tn = matrix[1][1]
     print(f"\n  TP={tp}  FP={fp}  FN={fn}  TN={tn}")
 
-
-# ──────────────────────────────────────────────
-# RAPPORT FINAL
-# ──────────────────────────────────────────────
 
 def print_report(metrics: dict, metrics_by_type: dict, stats: dict):
     sep = "=" * 60
     print(f"\n{sep}")
     print("  RAPPORT D'ÉVALUATION — RAG + Gemma")
     print(sep)
-    print(f"  Date       : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"  Total IOC  : {stats['total']}")
     print(f"  Succès     : {stats['success']}  |  Erreurs : {stats['errors']}")
     print(f"  RAG activé : {stats['rag_used']}  |  RAG skippé : {stats['rag_skipped']}")
@@ -209,33 +265,43 @@ def print_report(metrics: dict, metrics_by_type: dict, stats: dict):
     print(f"  {'Precision' :20} : {metrics['macro_precision']:.4f}")
     print(f"  {'Recall'    :20} : {metrics['macro_recall']:.4f}")
     print(f"  {'F1-Score'  :20} : {metrics['macro_f1']:.4f}")
+    print(f"  Correct     : {metrics['correct']}/{metrics['total']}")
     print(f"\n  PAR CLASSE")
     for cls, m in metrics["per_class"].items():
         print(f"  [{cls}]  P={m['precision']:.4f}  R={m['recall']:.4f}  F1={m['f1']:.4f}  (support={m['support']})")
     print(f"\n  PAR TYPE D'IOC")
     for ioc_type, m in metrics_by_type.items():
-        print(f"  [{ioc_type:8}]  Acc={m['accuracy']:.4f}  F1={m['macro_f1']:.4f}")
+        print(f"  [{ioc_type:8}]  Acc={m['accuracy']:.4f} ({m['accuracy']*100:.2f}%)  F1={m['macro_f1']:.4f}")
     print(f"\n{sep}\n")
 
 
 # ──────────────────────────────────────────────
-# BOUCLE PRINCIPALE D'ÉVALUATION
+# BOUCLE PRINCIPALE
 # ──────────────────────────────────────────────
 
-def evaluate(dataset_path: str, api_url: str, output_path: str):
-    # Chargement du dataset
+def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
     with open(dataset_path, "r", encoding="utf-8") as f:
         dataset = json.load(f)
 
     print(f"[INFO] {len(dataset)} IOC chargés depuis {dataset_path}")
-    print(f"[INFO] API cible : {api_url}")
+    print(f"[INFO] API cible  : {api_url}")
+    print(f"[INFO] Résultats  : {txt_path}")
     print(f"[INFO] Démarrage de l'évaluation...\n")
 
-    results   = []
-    y_true    = []
-    y_pred    = []
-    stats     = {"total": 0, "success": 0, "errors": 0,
-                 "rag_used": 0, "rag_skipped": 0, "fallback": 0}
+    # Initialise le fichier texte avec un header
+    with open(txt_path, "w", encoding="utf-8") as f:
+        f.write(f"ÉVALUATION RAG + Gemma — {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"Dataset : {dataset_path}\n")
+        f.write(f"API     : {api_url}\n")
+        f.write("=" * 60 + "\n\n")
+
+    results = []
+    y_true  = []
+    y_pred  = []
+    stats   = {
+        "total": 0, "success": 0, "errors": 0,
+        "rag_used": 0, "rag_skipped": 0, "fallback": 0
+    }
 
     for i, item in enumerate(dataset):
         indicator  = item.get("value", "").strip()
@@ -247,23 +313,28 @@ def evaluate(dataset_path: str, api_url: str, output_path: str):
             continue
 
         stats["total"] += 1
-
-        # Appel API
-        print(f"[{i+1:03d}/{len(dataset)}] {ioc_type:8} | {indicator[:40]:40} | label={true_label} ", end="", flush=True)
+        print(
+            f"[{i+1:03d}/{len(dataset)}] {ioc_type:8} | "
+            f"{indicator[:40]:40} | label={true_label} ",
+            end="", flush=True
+        )
 
         api_response = call_api_force_rag(indicator, ioc_type, api_url)
-        print(f"DEBUG llm_analysis: {api_response.get('llm_analysis', {})}")
 
         if "error" in api_response and not api_response.get("llm_analysis"):
             print(f"→ ERREUR : {api_response['error']}")
             stats["errors"] += 1
             results.append({
-                "indicator": indicator,
-                "ioc_type": ioc_type,
-                "true_label": true_label,
-                "status": "error",
+                "indicator": indicator, "ioc_type": ioc_type,
+                "true_label": true_label, "status": "error",
                 "error": api_response.get("error")
             })
+            # Sauvegarde l'erreur dans le fichier texte aussi
+            with open(txt_path, "a", encoding="utf-8") as f:
+                f.write(f"[{i+1:04d}] ERROR\n")
+                f.write(f"  indicator : {indicator}\n")
+                f.write(f"  type      : {ioc_type}\n")
+                f.write(f"  error     : {api_response.get('error')}\n\n")
             time.sleep(DELAY_BETWEEN_REQUESTS)
             continue
 
@@ -274,14 +345,17 @@ def evaluate(dataset_path: str, api_url: str, output_path: str):
         y_pred.append(predicted_label)
 
         correct = "✓" if predicted_label == true_label else "✗"
-        print(f"→ pred={predicted_label:9} ({threat_level:8}) {correct}  rag={'oui' if rag_used else 'non'}")
+        print(
+            f"→ pred={predicted_label:9} ({threat_level:8}) {correct}  "
+            f"rag={'oui' if rag_used else 'non'}"
+        )
 
         stats["success"]     += 1
         stats["rag_used"]    += int(rag_used)
         stats["rag_skipped"] += int(rag_skipped)
         stats["fallback"]    += int(fallback)
 
-        results.append({
+        result_entry = {
             "indicator":       indicator,
             "ioc_type":        ioc_type,
             "true_label":      true_label,
@@ -292,32 +366,63 @@ def evaluate(dataset_path: str, api_url: str, output_path: str):
             "rag_skipped":     rag_skipped,
             "fallback":        fallback,
             "status":          "success",
-        })
-        
-        print_ioc_report(api_response, show_evidence=False)
+        }
+        results.append(result_entry)
+
+        # ── Sauvegarde immédiate dans le fichier texte ──
+        save_ioc_result_txt(
+            txt_path       = txt_path,
+            idx            = i + 1,
+            indicator      = indicator,
+            ioc_type       = ioc_type,
+            true_label     = true_label,
+            predicted_label= predicted_label,
+            threat_level   = threat_level,
+            rag_used       = rag_used,
+            fallback       = fallback,
+            rag_skipped    = rag_skipped,
+            api_response   = api_response,
+        )
+
+        # Affichage rapport détaillé (optionnel)
+        if HAS_REPORT:
+            print_ioc_report(api_response, show_evidence=False)
 
         time.sleep(DELAY_BETWEEN_REQUESTS)
 
-    # Calcul des métriques
+    # ── Métriques finales ──
     if not y_true:
-        print("[ERREUR] Aucun résultat valide. Vérifier l'URL de l'API.")
+        print("[ERREUR] Aucun résultat valide.")
         return
 
-    metrics          = compute_metrics(y_true, y_pred)
-    metrics_by_type  = compute_metrics_by_type(results)
+    metrics         = compute_metrics(y_true, y_pred)
+    metrics_by_type = compute_metrics_by_type(results)
 
-    # Affichage
+    # Console
     print_confusion_matrix(y_true, y_pred)
     print_report(metrics, metrics_by_type, stats)
 
-    # Sauvegarde JSON
+    # ── Sauvegarde résumé dans le fichier texte ──
+    save_summary_txt(
+        txt_path        = txt_path,
+        metrics         = metrics,
+        metrics_by_type = metrics_by_type,
+        stats           = stats,
+        dataset_path    = dataset_path,
+        y_true          = y_true,
+        y_pred          = y_pred,
+    )
+
+    print(f"[INFO] Résultats texte → {txt_path}")
+
+    # ── Sauvegarde JSON complète ──
     output = {
         "meta": {
-            "date":          datetime.now().isoformat(),
-            "dataset":       dataset_path,
-            "api_url":       api_url,
-            "total_ioc":     stats["total"],
-            "force_rag_mode": True,
+            "date":              datetime.now().isoformat(),
+            "dataset":           dataset_path,
+            "api_url":           api_url,
+            "total_ioc":         stats["total"],
+            "force_rag_mode":    True,
             "threshold_mapping": THREAT_LEVEL_TO_LABEL,
         },
         "stats":           stats,
@@ -325,11 +430,10 @@ def evaluate(dataset_path: str, api_url: str, output_path: str):
         "metrics_by_type": metrics_by_type,
         "results":         results,
     }
-
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
-    print(f"[INFO] Résultats sauvegardés dans : {output_path}")
+    print(f"[INFO] Résultats JSON  → {output_path}")
 
 
 # ──────────────────────────────────────────────
@@ -337,14 +441,16 @@ def evaluate(dataset_path: str, api_url: str, output_path: str):
 # ──────────────────────────────────────────────
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Évaluation RAG + Gemma — Cybersécurité PFE")
-    parser.add_argument("--dataset", required=True,  help="Chemin vers le fichier JSON du dataset de test")
-    parser.add_argument("--url",     required=True,  help="URL de base de l'API (ex: http://xxxx.ngrok.io)")
-    parser.add_argument("--output",  default="resultats_eval.json", help="Fichier de sortie JSON")
+    parser = argparse.ArgumentParser(description="Évaluation RAG + Gemma — PFE Cybersécurité")
+    parser.add_argument("--dataset", required=True,  help="Chemin vers le dataset JSON")
+    parser.add_argument("--url",     required=True,  help="URL de base de l'API")
+    parser.add_argument("--output",  default="resultats_eval.json", help="Fichier JSON de sortie")
+    parser.add_argument("--txt",     default="resultats_eval.txt",  help="Fichier texte de sortie")
     args = parser.parse_args()
 
     evaluate(
-        dataset_path=args.dataset,
-        api_url=args.url.rstrip("/"),
-        output_path=args.output,
+        dataset_path = args.dataset,
+        api_url      = args.url.rstrip("/"),
+        output_path  = args.output,
+        txt_path     = args.txt,
     )

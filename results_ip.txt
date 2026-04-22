@@ -1,0 +1,516 @@
+Dataset : ip_dataset.json
+API     : http://127.0.0.1:8000
+
+============================================================
+  RAPPORT D'ÉVALUATION — RAG + Gemma - IP 
+============================================================
+  Dataset      : ip_dataset.json
+  Date         : 2026-04-22 01:11:55
+  Total IOC    : 40
+  Succès       : 40  |  Erreurs : 0
+  RAG activé   : 40  |  RAG skippé : 0
+  Fallback     : 0
+============================================================
+
+  MÉTRIQUES GLOBALES
+  Accuracy             : 0.9500  (95.00%)
+  Precision            : 0.9546
+  Recall               : 0.9500
+  F1-Score             : 0.9499
+  Correct              : 38/40
+
+  CONFUSION MATRIX
+                   pred_malicious   pred_clean
+  real_malicious               20            0
+  real_clean                    2           18
+  TP=20  FP=2  FN=0  TN=18
+
+  PAR CLASSE
+  [malicious]  P=0.9091  R=1.0000  F1=0.9524  support=20
+  [clean    ]  P=1.0000  R=0.9000  F1=0.9474  support=20
+
+  PAR TYPE D'IOC
+  [ip      ]  Acc=0.9500 (95.00%)  F1=0.9499  correct=38/40
+
+============================================================
+
+[0001] CORRECT
+  indicator    : 8.8.8.8
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 75
+  rag_used     : True
+  summary      : This IP addresses does not show any signs of malicious activity according to multiple sources including VirusTotal, Abus
+
+[0002] CORRECT
+  indicator    : 8.8.4.4
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 70
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No significant indicators of compromise were found in the provided information. This IP address does not appear to have 
+
+[0003] CORRECT
+  indicator    : 1.1.1.1
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No reported malicious activity associated with this IP address was found in the provided knowledge base. This IP address
+
+[0004] CORRECT
+  indicator    : 1.0.0.1
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 70
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No major indicators of compromise were found when analyzing this IP through various security tools like VirusTotal and A
+
+[0005] CORRECT
+  indicator    : 10.10.10.10
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No reports indicate that this IP address is associated with malware or other malicious activities.
+
+[0006] CORRECT
+  indicator    : 11.11.11.11
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 80
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No notable indicators of compromise were found in this analysis. Monitor for unusual network activity.
+
+[0007] CORRECT
+  indicator    : 9.4.7.3
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No reported malicious activity associated with this IP address was found in various databases.
+
+[0008] CORRECT
+  indicator    : 149.112.112.112
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0009] CORRECT
+  indicator    : 208.67.222.222
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 30
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal, AbuseIPDB, or OTX Pulse. It i
+
+[0010] CORRECT
+  indicator    : 208.67.220.220
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 25
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no known malicious activity and appears legitimate based on available threat intelligence.
+
+[0011] WRONG
+  indicator    : 94.140.14.14
+  type         : ip
+  true_label   : clean
+  predicted    : malicious
+  threat_level : medium
+  score        : 55
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP address exhibits unusual outbound traffic patterns that warrant investigation due to its lack of known malicious
+
+[0012] CORRECT
+  indicator    : 8.20.247.20
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No reported malicious activity associated with this IP address was found in various databases. This IP address appears t
+
+[0013] CORRECT
+  indicator    : 156.154.70.1
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 30
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0014] CORRECT
+  indicator    : 149.112.112.112
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0015] CORRECT
+  indicator    : 208.67.222.222
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 25
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0016] CORRECT
+  indicator    : 77.88.8.1
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : No information found regarding this IP in our database. This IP does not appear to have been linked to any malicious act
+
+[0017] WRONG
+  indicator    : 94.140.14.14
+  type         : ip
+  true_label   : clean
+  predicted    : malicious
+  threat_level : medium
+  score        : 55
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP address exhibits unusual outbound traffic patterns that warrant investigation due to its lack of known malicious
+
+[0018] CORRECT
+  indicator    : 156.154.70.11
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 25
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0019] CORRECT
+  indicator    : 172.66.213.38
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses does not show any signs of malicious behavior according to multiple sources.
+
+[0020] CORRECT
+  indicator    : 104.16.6.65
+  type         : ip
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 30
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP addresses shows no reported malicious activity from major sources like VirusTotal and AbuseIPDB. It is recommend
+
+[0021] CORRECT
+  indicator    : 188.166.164.250
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported as part of a botnet campaign targeting multiple organizations in Europe. It appears to have in
+
+[0022] CORRECT
+  indicator    : 3.134.216.108
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is important to block and moni
+
+[0023] CORRECT
+  indicator    : 203.161.47.131
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is crucial to block and monito
+
+[0024] CORRECT
+  indicator    : 190.19.15.203
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It should be blocked at your fire
+
+[0025] CORRECT
+  indicator    : 61.137.136.255
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 55
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported as potentially associated with malware activity on multiple platforms. It should be investigat
+
+[0026] CORRECT
+  indicator    : 103.172.236.15
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It should be blocked at your fire
+
+[0027] CORRECT
+  indicator    : 195.184.76.21
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is crucial to block and monito
+
+[0028] CORRECT
+  indicator    : 209.38.204.16
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been marked as suspicious by VirusTotal based on multiple detections from different antivirus vendors. This 
+
+[0029] CORRECT
+  indicator    : 36.135.62.97
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is crucial to block and monito
+
+[0030] CORRECT
+  indicator    : 47.77.232.44
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It should be blocked at your fire
+
+[0031] CORRECT
+  indicator    : 80.66.66.70
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been associated with multiple malware campaigns and exploits. It should be blocked at your firewall to preve
+
+[0032] CORRECT
+  indicator    : 2.57.121.69
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been identified as part of a malware campaign. It is crucial to block traffic from this IP on your network p
+
+[0033] CORRECT
+  indicator    : 43.252.231.122
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It should be blocked at the firew
+
+[0034] CORRECT
+  indicator    : 2.57.121.25
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been identified as malicious by multiple sources including VirusTotal, AbuseIPDB, OTX and XDR platforms.
+
+[0035] CORRECT
+  indicator    : 85.184.248.187
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 65
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been identified as malicious by multiple sources including VirusTotal and AbuseIPDB. It is important to inve
+
+[0036] CORRECT
+  indicator    : 120.48.109.159
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 60
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It should be blocked at your fire
+
+[0037] CORRECT
+  indicator    : 87.251.64.145
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is important to block any conn
+
+[0038] CORRECT
+  indicator    : 125.124.92.11
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 65
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported to have engaged in malicious activity on multiple platforms. It is crucial to block and monito
+
+[0039] CORRECT
+  indicator    : 180.76.243.197
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 65
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported as part of a botnet campaign targeting multiple organizations in various countries. It appears
+
+[0040] CORRECT
+  indicator    : 52.243.57.116
+  type         : ip
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This IP has been reported as part of a botnet campaign targeting multiple organizations in Japan. It appears to have eng
+
+
+

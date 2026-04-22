@@ -142,13 +142,25 @@ def _vt_verdict_clean(raw: dict, ioc_type: str) -> bool:
 
 
 def _must_use_llm_rule2(raw: dict, ioc_type: str) -> bool:
-    """Verdict / score / détections qui imposent LLM + RAG (non skip)."""
     t = _lower(ioc_type)
     gv = _verdict_for_type(raw, t)
     if gv in ("malicious", "high", "suspicious", "suspect", "douteux"):
+        # Pour URL : ignorer si VT=0 et GSB=clean (PhishTank faux positif)
+        if t == "url":
+            vt_mal = _url_vt_malicious(raw)
+            gsb = _lower((raw.get("vendors") or {}).get(
+                "google_safe_browsing", {}).get("verdict", ""))
+            if vt_mal == 0 and gsb != "malicious":
+                return False  # PhishTank seul ne suffit pas
         return True
     grs = _global_risk_score(raw, t)
     if grs is not None and grs > 50:
+        if t == "url":
+            vt_mal = _url_vt_malicious(raw)
+            gsb = _lower((raw.get("vendors") or {}).get(
+                "google_safe_browsing", {}).get("verdict", ""))
+            if vt_mal == 0 and gsb != "malicious":
+                return False  # Score élevé dû à PhishTank seul
         return True
     if _vt_malicious_count(raw, t) > 0:
         return True
@@ -221,6 +233,53 @@ def _mail_domain_legit(raw: dict) -> bool:
         return True
     prov = raw.get("fournisseur")
     return prov in _LEGIT_MAIL_PROVIDERS
+
+
+def _mail_auth_present(raw: dict) -> bool:
+    def _present(v: object) -> bool:
+        s = _lower(v)
+        return s not in ("", "unknown", "n/a", "na", "none", "null", "absent", "missing", "false")
+    return _present(raw.get("spf")) or _present(raw.get("dmarc")) or _present(raw.get("dkim"))
+
+
+def _mail_ti_is_benign(raw: dict, domain_signals: dict | None = None) -> bool:
+    score = _as_int(raw.get("score"), 0)
+    verdict = _lower(raw.get("verdict"))
+    alerts = raw.get("alertes") or []
+    alert_count = len(alerts) if isinstance(alerts, list) else 0
+    domain_vt_mal = _as_int((domain_signals or {}).get("vt_malicious"), 0)
+    return (
+        score >= 70
+        and verdict in ("fiable", "clean", "low")
+        and alert_count <= 3
+        and _mail_auth_present(raw)
+        and domain_vt_mal == 0
+    )
+
+
+def _mail_contradictory_summary(summary: object) -> bool:
+    s = _lower(summary)
+    contradictory_terms = (
+        "missing", "not been authenticated", "not authenticated", "spf absent",
+        "dmarc absent", "dkim absent", "mx error", "mx errors", "unknown account"
+    )
+    return any(term in s for term in contradictory_terms)
+
+
+def _build_mail_ti_fact_summary(raw: dict) -> str:
+    domain = raw.get("domaine", "unknown")
+    score = _as_int(raw.get("score"), 0)
+    verdict = raw.get("verdict", "unknown")
+    alerts = raw.get("alertes") or []
+    n_alerts = len(alerts) if isinstance(alerts, list) else 0
+    spf = raw.get("spf", "unknown")
+    dmarc = raw.get("dmarc", "unknown")
+    dkim = raw.get("dkim", "unknown")
+    return (
+        f"Analyse TI MXToolbox cohérente: domaine {domain}, verdict={verdict}, score={score}/100, "
+        f"SPF={spf}, DMARC={dmarc}, DKIM={dkim}, alertes={n_alerts}. "
+        "Aucun signal malveillant confirmé; indicateur classé bénin."
+    )
 
 
 def get_threat_intelligence(indicator: str, indicator_type: str) -> dict:
@@ -355,8 +414,6 @@ def build_clean_response(raw: dict, ti_data: dict, ioc_type: str) -> dict:
         "threat_level": "clean",
         "score": 0,
         "summary": summary,
-        "tags": [],
-        "recommandation": "Aucune action urgente requise d'après les flux Threat Intelligence.",
         "model_used": None,
         "rag_used": False,
         "fallback": False,
@@ -621,7 +678,6 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
                 "score": 0,
                 "summary": f"LLM indisponible : {str(e)}",
                 "tags": [],
-                "recommandation": "Analyse manuelle requise.",
                 "fallback": True,
             }
     if ioc_type == "mail":
@@ -633,12 +689,15 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
              print(f"[MAIL] Domain malveillant vt_malicious={domain_signals['vt_malicious']} → force high")
              llm_result["threat_level"] = "high"
              llm_result["score"] = max(80, llm_result.get("score", 80))
-        if mail_score >= 50 or mail_verdict in ("fiable", "clean", "low") and n_alerts <= 3 and domain_signals.get("vt_malicious", 0) == 0:
+        if _mail_ti_is_benign(raw, domain_signals):
             tl = _lower(llm_result.get("threat_level", ""))
-            if tl in ("high", "critical", "medium"):
+            if tl in ("high", "critical", "medium", "unknown"):
                 print(f"[MAIL] Cap LLM {tl}→low")
                 llm_result["threat_level"] = "low"
-                llm_result["score"] = min(25, llm_result.get("score", 25))
+            llm_result["score"] = min(25, _as_int(llm_result.get("score"), 25))
+            if _mail_contradictory_summary(llm_result.get("summary", "")):
+                print("[MAIL] Résumé contradictoire remplacé par résumé TI factuel")
+                llm_result["summary"] = _build_mail_ti_fact_summary(raw)
     # ── Post-processing hash ──────────────────────────────
     elif ioc_type == "hash":
         vt_mal = _hash_vt_malicious(raw)
@@ -671,24 +730,25 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
             llm_result["score"] = max(75, llm_result.get("score", 75))
 
     # ── Post-processing URL ───────────────────────────────
-    elif ioc_type == "url":
-        vt_mal = _url_vt_malicious(raw)
-        gsb = _lower(
-            (raw.get("vendors") or {}).get("google_safe_browsing", {}).get("verdict", "")
-        )
-        tl = _lower(llm_result.get("threat_level", ""))
-        if vt_mal == 0 and gsb != "malicious" and tl in ("high", "critical"):
-            print(f"[URL] Cap {tl}→low (vt_mal=0, gsb={gsb})")
-            llm_result["threat_level"] = "low"
-            llm_result["score"] = min(20, llm_result.get("score", 20))
-        elif (vt_mal > 3 or gsb == "malicious") and tl in ("low", "clean"):
-            print(f"[URL] Force high (vt_mal={vt_mal}, gsb={gsb})")
-            llm_result["threat_level"] = "high"
-            llm_result["score"] = max(75, llm_result.get("score", 75))
+    elif ioc_type == "url":                                    # 4 espaces
+        vt_mal = _url_vt_malicious(raw)                        # 8 espaces
+        gsb = _lower(                                          # 8 espaces
+            (raw.get("vendors") or {})
+            .get("google_safe_browsing", {})
+            .get("verdict", ""))
+        pt_verified = (raw.get("vendors") or {}).get(          # 8 espaces
+            "phishtank", {}).get("verified", False)
+        tl = _lower(llm_result.get("threat_level", ""))        # 8 espaces
+        if vt_mal == 0 and gsb != "malicious":                 # 8 espaces
+            if tl in ("high", "critical", "medium"):           # 12 espaces
+                llm_result["threat_level"] = "low"             # 16 espaces
+                llm_result["score"] = min(25, llm_result.get("score", 25))
+        elif vt_mal > 3 or gsb == "malicious":                 # 8 espaces
+            if tl in ("low", "clean"):                         # 12 espaces
+                llm_result["threat_level"] = "high"            # 16 espaces
+                llm_result["score"] = max(75, llm_result.get("score", 75))
 
     # ── Post-processing IP ────────────────────────────────
-    # (déjà géré par _apply_ip_suspicious_severity_cap plus haut,
-    #  on ajoute juste le cas vt_mal=0)
     elif ioc_type == "ip":
         vt_mal = _ip_vt_malicious(raw)
         abuse  = _as_int((raw.get("abuseipdb") or {}).get("abuse_score", 0))
@@ -701,7 +761,7 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
     rag_context = (
         [{"text": r["text"], "source": r["source"], "score": r["score"]} for r in rag_docs] if rag_docs else []
     )
-
+    
     return {
         "indicator": indicator,
         "type": ioc_type,
@@ -713,13 +773,10 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
             "score": llm_result.get("score"),
             "summary": llm_result.get("summary"),
             "tags": llm_result.get("tags", []),
-            "recommended_action": llm_result.get("recommandation"),
             "model": llm_result.get("model_used"),
             "rag_used": llm_result.get("rag_used", False),
             "fallback": llm_result.get("fallback", False),
-            "rag_skipped": skip_rag,
-            "rag_skip_reason": rag_gate_reason if skip_rag else None,
-            "rag_fetch_error": rag_fetch_error,
             "ti_only": classification == "CLEAN",
         },
+
     }

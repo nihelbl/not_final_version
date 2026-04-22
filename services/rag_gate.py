@@ -26,6 +26,17 @@ def _as_float(x: object, default: float = 0.0) -> float:
         return default
 
 
+def _mail_auth_state(value: object) -> str:
+    s = _lower(value)
+    if s in ("", "unknown", "n/a", "na", "none", "null", "absent", "missing", "false"):
+        return "missing"
+    if "permerror" in s or "softfail" in s or "neutral" in s or "permissive" in s:
+        return "permissive"
+    if "valid" in s or "pass" in s or "enforce" in s or "quarantine" in s or "reject" in s:
+        return "valid"
+    return "present"
+
+
 def collect_ti_signals(ioc_type: str, raw: dict) -> dict:
     """Extrait des signaux comparables depuis les payloads bruts des services."""
     t = _lower(ioc_type)
@@ -93,11 +104,17 @@ def collect_ti_signals(ioc_type: str, raw: dict) -> dict:
     elif t == "mail":
         alertes = raw.get("alertes") or []
         n_alerts = len(alertes) if isinstance(alertes, list) else 0
+        spf_state = _mail_auth_state(raw.get("spf"))
+        dmarc_state = _mail_auth_state(raw.get("dmarc"))
+        dkim_state = _mail_auth_state(raw.get("dkim"))
         out.update(
             {
                 "verdict": _lower(raw.get("verdict")),
                 "mailbox_score": _as_int(raw.get("score"), 0),
                 "alert_count": n_alerts,
+                "spf_state": spf_state,
+                "dmarc_state": dmarc_state,
+                "dkim_state": dkim_state,
             }
         )
 
@@ -174,9 +191,14 @@ def should_disable_rag(ioc_type: str, raw: dict, signals: dict | None = None) ->
         return False, None
 
     if t == "mail":
-        if sig.get("mailbox_score", 0) >= 80 and sig.get("alert_count", 99) <= 4:
+        auth_present = (
+            sig.get("spf_state") in ("present", "valid", "permissive")
+            or sig.get("dmarc_state") in ("present", "valid", "permissive")
+            or sig.get("dkim_state") in ("present", "valid", "permissive")
+        )
+        if auth_present and sig.get("mailbox_score", 0) >= 80 and sig.get("alert_count", 99) <= 4:
             return True, "mail_configuration_sound"
-        if sig.get("verdict", "") == "fiable" and sig.get("mailbox_score", 0) >= 75:
+        if auth_present and sig.get("verdict", "") == "fiable" and sig.get("mailbox_score", 0) >= 75:
             return True, "mail_verdict_fiable"
         return False, None
 

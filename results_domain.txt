@@ -1,0 +1,511 @@
+Dataset : domain_dataset.json
+API     : http://127.0.0.1:8000
+============================================================
+  RAPPORT D'ÉVALUATION — RAG + Gemma - Domain 
+============================================================
+  Dataset      : domain_dataset.json
+  Date         : 2026-04-22 05:10:55
+  Total IOC    : 40
+  Succès       : 39  |  Erreurs : 1
+  RAG activé   : 39  |  RAG skippé : 0
+  Fallback     : 0
+============================================================
+
+  MÉTRIQUES GLOBALES
+  Accuracy             : 0.9231  (92.31%)
+  Precision            : 0.9318
+  Recall               : 0.9250
+  F1-Score             : 0.9228
+  Correct              : 36/39
+
+  CONFUSION MATRIX
+                   pred_malicious   pred_clean
+  real_malicious               19            0
+  real_clean                    3           17
+  TP=19  FP=3  FN=0  TN=17
+
+  PAR CLASSE
+  [malicious]  P=0.8636  R=1.0000  F1=0.9268  support=19
+  [clean    ]  P=1.0000  R=0.8500  F1=0.9189  support=20
+
+  PAR TYPE D'IOC
+  [domain  ]  Acc=0.9231 (92.31%)  F1=0.9228  correct=36/39
+
+============================================================
+
+
+[0001] CORRECT
+  indicator    : bing.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 58
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : bing.com has been reported to have no malicious activity in its history. It is considered safe for browsing.
+
+[0002] WRONG
+  indicator    : fastly.net
+  type         : domain
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 65
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : fastly.net appears to have been used for phishing activity based on its association with login-related content and lack 
+
+[0003] CORRECT
+  indicator    : netflix.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 49
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : netflix.com has been reported as potentially malicious in some sources but does not have any detected malware associated
+
+[0004] CORRECT
+  indicator    : microsoftonline.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 45
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : microsoftonline.com has been reported to have no malicious activity in its history.
+
+[0005] CORRECT
+  indicator    : whatsapp.net
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 45
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : whatsapp.net has been reported in several phishing campaigns targeting users who have lost their phones.
+
+[0006] CORRECT
+  indicator    : appsflyersdk.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 78
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : appsflyersdk.com has been reported to have no malicious activity in its history.
+
+[0007] WRONG
+  indicator    : workers.dev
+  type         : domain
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 85
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain appears to have been used for phishing activity due to its unusual name and lack of legitimate purpose. It w
+
+[0008] CORRECT
+  indicator    : office.net
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 54
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : office.net has been reported to have no malicious activity in its history. It is recommended that users avoid using this
+
+[0009] CORRECT
+  indicator    : apple-dns.net
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 48
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : apple-dns.net has been reported to have no malicious activity in its history.
+
+[0010] CORRECT
+  indicator    : wordpress.org
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 49
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : wordpress.org has not been reported to contain any malware. It is considered safe from an informational perspective.
+
+[0011] CORRECT
+  indicator    : digicert.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 45
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : digicert.com has been reported to have no malicious activity in its history.
+
+[0012] CORRECT
+  indicator    : sharepoint.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 54
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : sharepoint.com has been reported to have no malicious activity in its history. It is considered safe for browsing.
+
+[0013] CORRECT
+  indicator    : trafficmanager.net
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 45
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : trafficmanager.net has been reported to have no malicious activity in its history.
+
+[0014] CORRECT
+  indicator    : youtu.be
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 78
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : youtube.to has been flagged as potentially malicious due to its similarity to other phishing sites. It is important to e
+
+[0015] CORRECT
+  indicator    : aaplimg.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 40
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been reported to have no malicious activity detected in its history.
+
+[0016] CORRECT
+  indicator    : booking.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 79
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : booking.com has been reported to have no malicious activity detected in its DNS records.
+
+[0017] CORRECT
+  indicator    : ezviz7.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 40
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : ezviz7.com has not been reported to have any malicious activity at the time of analysis. It is recommended that users ex
+
+[0018] CORRECT
+  indicator    : pinterest.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 0
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : Partial analysis.
+
+[0019] CORRECT
+  indicator    : whatsapp.com
+  type         : domain
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 48
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : whatsapp.com has been reported as potentially malicious in some sources but does not show any signs of compromise at fir
+
+[0020] WRONG
+  indicator    : cloudfront.net
+  type         : domain
+  true_label   : clean
+  predicted    : malicious
+  threat_level : high
+  score        : 92
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : cloudfront.net is associated with multiple indicators of compromise including spam campaigns, malware distribution, and 
+
+[0021] CORRECT
+  indicator    : 00c3aecd.shop-game.xyz
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0022] CORRECT
+  indicator    : 00c238ff.hsduecinfj.com.cn
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious based on its association with known malware campaigns and phishing
+
+[0023] CORRECT
+  indicator    : 012841010.duckdns.org
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple indicators of compromise incl
+
+[0024] CORRECT
+  indicator    : 012de12faamaijf-cfbb43.ingress-earth.ewp.live
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple detection events from various
+
+[0025] CORRECT
+  indicator    : 0167189.synergyglobal.one
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 95
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known malware campaigns and phishing a
+
+[0026] CORRECT
+  indicator    : 022saibo.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple detection events from various
+
+[0027] CORRECT
+  indicator    : metmasklogi.iwopop.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 95
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple indicators of compromise incl
+
+[0028] CORRECT
+  indicator    : tools.usps-goto.top
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple indicators of compromise incl
+
+[0029] CORRECT
+  indicator    : tools.usps-ordersearch.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0030] ERROR
+  indicator : tools.usps-packagestrack.com
+  type      : domain
+  error     : 500 Server Error: Internal Server Error for url: http://127.0.0.1:8000/ioc/analyze?force_rag=true
+
+[0031] CORRECT
+  indicator    : tools.uspsreceive.xyz
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious based on its association with known phishing activity and lack of 
+
+[0032] CORRECT
+  indicator    : tools.usps-redressal.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0033] CORRECT
+  indicator    : tools.usps.track.1cds5yc.shop
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0034] CORRECT
+  indicator    : tools.usps.track.3j45otl.shop
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0035] CORRECT
+  indicator    : tools.usps.track.3ssfxot.shop
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known malware campaigns and deceptive 
+
+[0036] CORRECT
+  indicator    : tools.usps-trackbhxyzhi.top
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 87
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0037] CORRECT
+  indicator    : toolsuspstracking.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 90
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known malware campaigns and phishing a
+
+[0038] CORRECT
+  indicator    : trackbest.click
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and lack of le
+
+[0039] CORRECT
+  indicator    : track.bloggersideas.com
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : medium
+  score        : 60
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with multiple detection events and reported
+
+[0040] CORRECT
+  indicator    : track.blogmarketcom.fr
+  type         : domain
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  rag_skipped  : False
+  fallback     : False
+  summary      : This domain has been flagged as potentially malicious due to its association with known phishing activity and low reputa
+
+
+

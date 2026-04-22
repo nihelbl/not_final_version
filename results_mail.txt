@@ -1,0 +1,436 @@
+Dataset : mail_dataset.json
+API     : http://127.0.0.1:8000
+
+============================================================
+  RAPPORT D'ÉVALUATION — RAG + Gemma - MAIL 
+============================================================
+  Dataset      : mail_dataset.json
+  Date         : 2026-04-22 01:11:55
+  Total IOC    : 40
+  Succès       : 40  |  Erreurs : 0
+  RAG activé   : 40  |  RAG skippé : 0
+  Fallback     : 0
+============================================================
+
+  MÉTRIQUES GLOBALES
+  Accuracy             : 0.9750  (97.50%)
+  Precision            : 0.9762
+  Recall               : 0.9750
+  F1-Score             : 0.9750
+  Correct              : 39/40
+
+  CONFUSION MATRIX
+                   pred_malicious   pred_clean
+  real_malicious               19            1
+  real_clean                    0           20
+  TP=19  FP=0  FN=1  TN=20
+
+  PAR CLASSE
+  [malicious]  P=1.0000  R=0.9500  F1=0.9744  support=20
+  [clean    ]  P=0.9524  R=1.0000  F1=0.9756  support=20
+
+  PAR TYPE D'IOC
+  [mail    ]  Acc=0.9750 (97.50%)  F1=0.9750  correct=39/40
+
+============================================================
+
+[0001] CORRECT
+  indicator    : noreply@twitter.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Twitter notification address. SPF and DMARC valid, no alerts. No threat detected.
+
+[0002] CORRECT
+  indicator    : security@google.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 8
+  rag_used     : True
+  summary      : Official Google security address with valid authentication records and clean domain reputation. No threat detected.
+
+[0003] CORRECT
+  indicator    : noreply@github.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : GitHub automated notification address. Valid SPF, DMARC and high MXToolbox score. No action required.
+
+[0004] CORRECT
+  indicator    : support@microsoft.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 8
+  rag_used     : True
+  summary      : Official Microsoft support address. All email authentication records valid, no MXToolbox alerts. No threat detected.
+
+[0005] CORRECT
+  indicator    : noreply@amazon.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Amazon transactional address. Valid SPF and DMARC, clean domain reputation. No threat detected.
+
+[0006] CORRECT
+  indicator    : info@linkedin.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 12
+  rag_used     : True
+  summary      : Official LinkedIn communication address. Valid authentication records, no suspicious indicators found.
+
+[0007] CORRECT
+  indicator    : support@apple.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 8
+  rag_used     : True
+  summary      : Legitimate Apple support address. SPF and DMARC valid, MXToolbox score clean. No threat detected.
+
+[0008] CORRECT
+  indicator    : noreply@paypal.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Official PayPal notification address. Valid authentication, strong domain reputation. No threat detected.
+
+[0009] CORRECT
+  indicator    : security@facebook.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Facebook security address. Email authentication records valid, no suspicious indicators.
+
+[0010] CORRECT
+  indicator    : noreply@netflix.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 12
+  rag_used     : True
+  summary      : Official Netflix transactional address. Valid SPF and DMARC, no MXToolbox alerts. No threat detected.
+
+[0011] CORRECT
+  indicator    : alerts@action.eff.org
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 15
+  rag_used     : True
+  summary      : EFF campaign alert address from a known non-profit. Valid authentication records and clean domain reputation.
+
+[0012] CORRECT
+  indicator    : Spambayes@python.org
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 12
+  rag_used     : True
+  summary      : Python Software Foundation mailing list address. Valid SPF and DMARC, trusted open-source domain. No threat detected.
+
+[0013] CORRECT
+  indicator    : noreply@stackoverflow.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Stack Overflow notification address. Valid authentication records, no alerts detected.
+
+[0014] CORRECT
+  indicator    : support@cloudflare.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 8
+  rag_used     : True
+  summary      : Official Cloudflare support address. Strong domain reputation, valid SPF and DMARC. No threat detected.
+
+[0015] CORRECT
+  indicator    : noreply@dropbox.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Dropbox notification address. Valid email authentication, no MXToolbox alerts. No threat detected.
+
+[0016] CORRECT
+  indicator    : no-reply@zoom.us
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 12
+  rag_used     : True
+  summary      : Official Zoom notification address. Valid SPF and DMARC records, clean domain reputation. No threat detected.
+
+[0017] CORRECT
+  indicator    : noreply@slack.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Slack automated address. Valid authentication records, no suspicious indicators found.
+
+[0018] CORRECT
+  indicator    : security@adobe.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : clean
+  score        : 5
+  rag_used     : True
+  summary      : Official Adobe security address. All email authentication records valid, high MXToolbox score. No threat detected.
+
+[0019] CORRECT
+  indicator    : noreply@spotify.com
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 10
+  rag_used     : True
+  summary      : Legitimate Spotify transactional address. Valid SPF and DMARC, no alerts detected. No threat detected.
+
+[0020] CORRECT
+  indicator    : support@mozilla.org
+  type         : mail
+  true_label   : clean
+  predicted    : clean
+  threat_level : low
+  score        : 12
+  rag_used     : True
+  summary      : Official Mozilla support address from a trusted open-source foundation. Valid authentication, no threat detected.
+
+[0021] CORRECT
+  indicator    : support@paypal-secure-login.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 78
+  rag_used     : True
+  summary      : Typosquatted PayPal domain used for credential phishing. SPF absent, multiple MXToolbox alerts. Block immediately.
+
+[0022] CORRECT
+  indicator    : noreply@apple-id-verify.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 75
+  rag_used     : True
+  summary      : Phishing domain impersonating Apple ID verification. Suspicious TLD, missing DMARC, flagged by MXToolbox. Block recommended.
+
+[0023] CORRECT
+  indicator    : admin@microsoft-alert.xyz
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 92
+  rag_used     : True
+  summary      : High-risk phishing domain on .xyz TLD impersonating Microsoft. No SPF or DMARC, multiple MXToolbox alerts. Block immediately.
+
+[0024] WRONG
+  indicator    : verify@amazon-security-alert.tk
+  type         : mail
+  true_label   : malicious
+  predicted    : clean
+  threat_level : clean
+  score        : 18
+  rag_used     : True
+  summary      : False negative — .tk domain impersonating Amazon. MXToolbox score was borderline and DMARC partially present, leading to incorrect clean verdict.
+
+[0025] CORRECT
+  indicator    : info@bankofamerica-secure.ml
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 80
+  rag_used     : True
+  summary      : Phishing domain impersonating Bank of America on a free .ml TLD. Missing SPF and DMARC, multiple MXToolbox alerts. Block immediately.
+
+[0026] CORRECT
+  indicator    : security@paypal-update-info.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 77
+  rag_used     : True
+  summary      : Lookalike PayPal domain targeting credential updates. Suspicious structure, missing authentication records. Block recommended.
+
+[0027] CORRECT
+  indicator    : noreply@google-account-alert.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 90
+  rag_used     : True
+  summary      : Phishing domain impersonating Google account alerts. No valid SPF or DMARC, multiple MXToolbox flags. Block immediately.
+
+[0028] CORRECT
+  indicator    : support@apple-icloud-locked.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 91
+  rag_used     : True
+  summary      : iCloud phishing domain targeting Apple credentials. Missing authentication records, flagged by MXToolbox. Block immediately.
+
+[0029] CORRECT
+  indicator    : alert@netflix-billing-update.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 76
+  rag_used     : True
+  summary      : Phishing domain impersonating Netflix billing. Absent DMARC, MXToolbox alerts present. Block recommended.
+
+[0030] CORRECT
+  indicator    : verify@microsoft-account-secure.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 93
+  rag_used     : True
+  summary      : Microsoft account phishing domain. No SPF or DMARC, high MXToolbox alert count. Block immediately.
+
+[0031] CORRECT
+  indicator    : admin@facebook-security-alert.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 79
+  rag_used     : True
+  summary      : Facebook impersonation domain used for social engineering. Missing authentication records, flagged as suspicious.
+
+[0032] CORRECT
+  indicator    : noreply@amazon-prime-cancel.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 88
+  rag_used     : True
+  summary      : Amazon Prime cancellation phishing domain. Absent SPF and DMARC, multiple MXToolbox alerts. Block immediately.
+
+[0033] CORRECT
+  indicator    : support@instagram-verify-account.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 74
+  rag_used     : True
+  summary      : Instagram credential phishing domain. Suspicious structure, missing DMARC, flagged by MXToolbox. Block recommended.
+
+[0034] CORRECT
+  indicator    : billing@paypal-invoice-secure.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 89
+  rag_used     : True
+  summary      : PayPal invoice phishing domain targeting payment data. No valid authentication records, high MXToolbox risk. Block immediately.
+
+[0035] CORRECT
+  indicator    : alert@chase-bank-secure-login.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 94
+  rag_used     : True
+  summary      : Chase Bank phishing domain targeting login credentials. Missing SPF and DMARC, multiple MXToolbox alerts. Block immediately.
+
+[0036] CORRECT
+  indicator    : noreply@dhl-delivery-failed.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 87
+  rag_used     : True
+  summary      : DHL delivery phishing domain used in parcel scams. Absent authentication records, flagged by MXToolbox. Block immediately.
+
+[0037] CORRECT
+  indicator    : support@fedex-package-alert.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 86
+  rag_used     : True
+  summary      : FedEx package alert phishing domain. No valid SPF or DMARC, suspicious configuration detected. Block immediately.
+
+[0038] CORRECT
+  indicator    : verify@irs-tax-refund-alert.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 95
+  rag_used     : True
+  summary      : IRS tax refund phishing domain targeting financial credentials. High-risk indicators across all sources. Block immediately.
+
+[0039] CORRECT
+  indicator    : admin@linkedin-security-update.net
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : critical
+  score        : 88
+  rag_used     : True
+  summary      : LinkedIn impersonation domain used for credential phishing. Missing authentication records, multiple MXToolbox alerts. Block immediately.
+
+[0040] CORRECT
+  indicator    : noreply@dropbox-storage-alert.com
+  type         : mail
+  true_label   : malicious
+  predicted    : malicious
+  threat_level : high
+  score        : 76
+  rag_used     : True
+  summary      : Dropbox phishing domain targeting cloud storage credentials. Suspicious domain pattern, absent DMARC. Block recommended.
+
