@@ -72,7 +72,7 @@ def _answer_cybersec_question(question: str) -> str:
         resp = requests.post(
             f"{LLM_API_URL}/chat",
             json={"question": question, "system": system},
-            timeout=60,
+            timeout=240,
             headers={"ngrok-skip-browser-warning": "true",
                      "Accept-Charset": "utf-8" },
         )
@@ -94,14 +94,131 @@ def _answer_cybersec_question(question: str) -> str:
     except Exception as e:
         return f"LLM error: {str(e)}"
 
+# ── Response formatting ─────────────────────────────────────────────────────
+
+def _format_response(indicator: str, ioc_type: str, raw_analysis: dict) -> dict:
+    ti  = raw_analysis.get("ti_data", {}) or {}
+    llm = raw_analysis.get("llm_analysis", {}) or {}
+
+    verdict = {
+        "threat_level":       llm.get("threat_level", "unknown"),
+        "score":              llm.get("score", 0),
+        "tags":               llm.get("tags", []),
+
+    }
+
+    t = ioc_type.lower()
+
+    if t == "ip":
+        vt_stats  = ti.get("vt_stats") or {}
+        abuseipdb = ti.get("abuseipdb") or {}
+        otx       = ti.get("otx") or {}
+        relations = ti.get("vt_relations") or {}
+        ti_summary = {
+            "country": ti.get("country"),
+            "asn":     ti.get("asn"),
+            "isp":     ti.get("as_owner"),
+            "reputation": {
+                "virustotal": {
+                    "malicious":  vt_stats.get("malicious", 0),
+                    "suspicious": vt_stats.get("suspicious", 0),
+                },
+                "abuseipdb": {"score": abuseipdb.get("abuse_score", 0)},
+                "otx":       {"pulses": otx.get("pulse_count", 0)},
+            },
+            "associated_domains": (relations.get("domains") or [])[:5],
+            "associated_files":   (relations.get("files") or [])[:5],
+        }
+
+    elif t == "hash":
+        vt_det = ti.get("vt_detection") or {}
+        otx    = ti.get("otx") or {}
+        ti_summary = {
+            "file_type":  ti.get("file_type"),
+            "first_seen": ti.get("first_submission"),
+            "detection": {
+                "virustotal": {
+                    "malicious":  vt_det.get("malicious", 0),
+                    "suspicious": vt_det.get("suspicious", 0),
+                    "undetected": vt_det.get("undetected", 0),
+                },
+                "otx": {"pulses": otx.get("pulse_count", 0)},
+            },
+            "mitre_attack": (ti.get("mitre_attack") or [])[:3],
+        }
+
+    elif t == "domain":
+        vt_det = ti.get("vt_detection") or {}
+        ti_summary = {
+            "ip":               ti.get("ip_address"),
+            "registrar":        ti.get("registrar"),
+            "created":          ti.get("creation_date"),
+            "detection": {
+                "virustotal": {"malicious": vt_det.get("malicious", 0),
+                               "suspicious": vt_det.get("suspicious", 0)},
+            },
+            "subdomains_count":  ti.get("subdomains_count", 0),
+            "global_risk_score": ti.get("global_risk_score", 0),
+        }
+
+    elif t == "url":
+        vt  = ti.get("virustotal") or {}
+        gsb = ti.get("google_safe_browsing") or {}
+        pt  = ti.get("phishtank") or {}
+        ti_summary = {
+            "domain": ti.get("domain"),
+            "ip":     ti.get("ip"),
+            "detection": {
+                "virustotal": {
+                    "malicious":  vt.get("malicious", 0),
+                    "suspicious": vt.get("suspicious", 0),
+                },
+                "google_safe_browsing": {
+                    "threats": gsb.get("threats", []),
+                },
+                "phishtank": {"verdict": pt.get("verdict")},
+            },
+            "global_risk_score": ti.get("global_risk_score"),
+        }
+
+    elif t in ("mail", "email"):
+        ti_summary = {
+            "domain":   ti.get("domain"),
+            "security": {
+                "mx":    "present" if ti.get("mx") else "missing",
+                "spf":   "present" if ti.get("spf") else "missing",
+                "dmarc": "present" if ti.get("dmarc") else "missing",
+            },
+            "alerts":   ti.get("alertes") or [],
+            "provider": ti.get("fournisseur"),
+        }
+
+    elif t == "cve":
+        ti_summary = {
+            "severity":    ti.get("severity"),
+            "cvss_score":  ti.get("cvss_score"),
+            "cvss_vector": ti.get("cvss_vector"),
+            "cwe":         ti.get("cwe", []),
+            "affected":    (ti.get("affected") or [])[:5],
+            "published":   ti.get("published"),
+        }
+
+    else:
+        ti_summary = ti
+
+    return {
+        "indicator":  indicator,
+        "type":       ioc_type,
+        "verdict":    verdict,
+        "ti_summary": ti_summary,
+    }
 
 def _build_human_message(indicator: str, result: dict) -> str:
     llm = result.get("llm_analysis", {})
     threat_level = llm.get("threat_level", "unknown")
     summary = llm.get("summary", "")
     return (
-        f"Analysis complete: `{indicator}` is classified as "
-        f"**{threat_level}**. {summary}"
+        f" {summary}"
     )
 
 
@@ -120,6 +237,9 @@ def _worst_verdict(results: list[dict]) -> str:
         if level in found:
             return level
     return "unknown"
+
+def _get_tl(r: dict) -> str:
+    return (r.get("verdict", {}).get("threat_level", "") or "").lower()
 
 
 def _analyze_one(indicator: str) -> dict:
@@ -168,8 +288,6 @@ def chat_message(body: ChatMessage, db: Session = Depends(get_db)):
     # Off-topic
     if intent == "off_topic":
         reply = {
-            "session_id": session_id,
-            "intent": "off_topic",
             "message": (
                 "I am a cybersecurity assistant. I can analyze indicators "
                 "(IPs, hashes, URLs, domains, emails, CVEs) and answer "
@@ -184,7 +302,7 @@ def chat_message(body: ChatMessage, db: Session = Depends(get_db)):
     # Cybersec question
     if intent == "question":
         answer = _answer_cybersec_question(message)
-        reply = {"session_id": session_id, "intent": "question", "message": answer}
+        reply = { "message": answer}
         db.add(Message(session_id=session_id, role="assistant", content=json.dumps(reply)))
         db.commit()
         return reply
@@ -194,15 +312,14 @@ def chat_message(body: ChatMessage, db: Session = Depends(get_db)):
     if "error" in result and "analysis" not in result:
         raise HTTPException(status_code=400, detail=result["error"])
 
-    human_msg = _build_human_message(message, result.get("analysis", {}))
+    raw_analysis = result.get("analysis", {})
+    formatted    = _format_response(message, result["type"], raw_analysis)
+
     reply = {
-        "session_id": session_id,
-        "intent": "ioc",
-        "indicator": message,
-        "type": result["type"],
-        "analysis": result.get("analysis", {}),
-        "message": human_msg,
+        "message":    _build_human_message(message, raw_analysis),
+        **formatted,
     }
+
     db.add(Message(session_id=session_id, role="assistant", content=json.dumps(reply)))
     db.commit()
     return reply
@@ -222,36 +339,44 @@ def chat_bulk(body: BulkChatRequest, db: Session = Depends(get_db)):
     db.add(Message(session_id=session_id, role="user", content=json.dumps(indicators)))
     db.commit()
 
-    results = [_analyze_one(ind) for ind in indicators]
+    raw_results = [_analyze_one(ind) for ind in indicators]
+
+    # Format chaque résultat
+    formatted_results = []
+    for r in raw_results:
+        if "error" in r and "analysis" not in r:
+            formatted_results.append({
+                "indicator": r["indicator"],
+                "type":      r.get("type", "unknown"),
+                "error":     r["error"],
+            })
+        else:
+            formatted_results.append(
+                _format_response(r["indicator"], r["type"], r.get("analysis", {}))
+            )
 
     malicious_levels = {"critical", "high", "medium"}
     clean_levels = {"low", "clean"}
 
-    def _get_tl(r):
-        return (
-            r.get("analysis", {}).get("llm_analysis", {}).get("threat_level", "") or ""
-        ).lower()
-
-    malicious_count = sum(1 for r in results if _get_tl(r) in malicious_levels)
-    clean_count = sum(1 for r in results if _get_tl(r) in clean_levels)
-    error_count = sum(1 for r in results if "error" in r and "analysis" not in r)
-    unknown_count = len(indicators) - malicious_count - clean_count - error_count
-    worst = _worst_verdict(results)
+    malicious_count = sum(1 for r in formatted_results if _get_tl(r) in malicious_levels)
+    clean_count     = sum(1 for r in formatted_results if _get_tl(r) in clean_levels)
+    error_count     = sum(1 for r in formatted_results if "error" in r)
+    unknown_count   = len(indicators) - malicious_count - clean_count - error_count
+    worst           = _worst_verdict(formatted_results)
 
     reply = {
-        "session_id": session_id,
         "summary": {
-            "total": len(indicators),
+            "total":           len(indicators),
             "malicious_count": malicious_count,
-            "clean_count": clean_count,
-            "unknown_count": unknown_count + error_count,
-            "worst_verdict": worst,
+            "clean_count":     clean_count,
+            "unknown_count":   unknown_count + error_count,
+            "worst_verdict":   worst,
             "human_summary": (
                 f"{malicious_count} malicious out of {len(indicators)} "
                 f"indicators analyzed. Worst verdict: {worst}."
             ),
         },
-        "results": results,
+        "results": formatted_results,
     }
 
     db.add(Message(session_id=session_id, role="assistant", content=json.dumps(reply)))

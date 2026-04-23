@@ -1,0 +1,204 @@
+[
+{
+    "message":  " This IP addresses does not show any signs of malicious activity according to available information.",
+    "indicator":  "172.66.213.38",
+    "type":  "ip",
+    "verdict":  {
+                    "threat_level":  "low",
+                    "score":  10,
+                    "tags":  [
+
+                             ]
+                },
+    "ti_summary":  {
+                       "country":  null,
+                       "asn":  13335,
+                       "isp":  "Cloudflare, Inc.",
+                       "reputation":  {
+                                          "virustotal":  {
+                                                             "malicious":  0,
+                                                             "suspicious":  0
+                                                         },
+                                          "abuseipdb":  {
+                                                            "score":  0
+                                                        },
+                                          "otx":  {
+                                                      "pulses":  0
+                                                  }
+                                      },
+                       "associated_domains":  [
+                                                  "mci.libercdn.xyz",
+                                                  "ffh2.gsmbax.net",
+                                                  "mci.ircf.space",
+                                                  "mci.netplan.sbs",
+                                                  "mci.ahwazjob.ir"
+                                              ],
+                       "associated_files":  [
+                                                "0342425019e52118421008b998938fd0ea2b2aadf7270ebd0cb7402e4f871b3a",
+                                                "129d3aa1c2a96776cdb796e5bfa494bb07625c8daa4376456f1c036d31e61ed2",
+                                                "9141dc30cade8cf9b5b75f0d38acdfb1981c81966ca073d46a118355e22b1154",
+                                                "9da93532c81f8146a594cbfac4ca30859811b8bb98f9ad5dda0a0e793d4d2f2d",
+                                                "dff155f493a4934aac1347ee156da7d8ba5b0c88709bd154130dd44429b23d8d"
+                                            ]
+                   }
+},
+{
+    "message":  " Multiple vendors have flagged this PowerShell script as potentially malicious. It likely downloads and executes additional components which could lead to system instability or data exfiltration. Investigate immediately.",
+    "indicator":  "44d88612fea8a8f36de82e1278abb02f",
+    "type":  "hash",
+    "verdict":  {
+                    "threat_level":  "high",
+                    "score":  90,
+                    "tags":  [
+                                 "malware",
+                                 "powershell",
+                                 "ransomware"
+                             ]
+                },
+    "ti_summary":  {
+                       "file_type":  "Powershell",
+                       "first_seen":  "2006-05-22 12:42:02",
+                       "detection":  {
+                                         "virustotal":  {
+                                                            "malicious":  67,
+                                                            "undetected":  2
+                                                        },
+                                         "otx":  {
+                                                     "pulses":  46
+                                                 }
+                                     },
+                       "mitre_attack":  [
+                                            {
+                                                "technique_id":  "T1059",
+                                                "technique_name":  "Command and Scripting Interpreter",
+                                                "source":  "detection name mapping",
+                                                "matched_on":  "trojan"
+                                            },
+                                            {
+                                                "technique_id":  "T1055",
+                                                "technique_name":  "Process Injection",
+                                                "source":  "detection name mapping",
+                                                "matched_on":  "trojan"
+                                            },
+                                            {
+                                                "technique_id":  "T1219",
+                                                "technique_name":  "Remote Access Software",
+                                                "source":  "detection name mapping",
+                                                "matched_on":  "no expiration"
+                                            }
+                                        ]
+                   }
+},
+
+{
+    "message":  " This domain has been flagged for potential involvement in malware distribution due to its association with known malicious activities and lack of legitimate purpose.",
+    "indicator":  "tools.usps-packagestrack.com",
+    "type":  "domain",
+    "verdict":  {
+                    "threat_level":  "high",
+                    "score":  75,
+                    "tags":  [
+                                 "malware-distribution",
+                                 "suspicious-domain",
+                                 "phishing"
+                             ]
+                },
+    "ti_summary":  {
+                       "ip":  "N/A",
+                       "registrar":  "ALIBABA.COM SINGAPORE E-COMMERCE PRIVATE LIMITED",
+                       "created":  "2023-08-17",
+                       "detection":  {
+                                         "virustotal":  {
+                                                            "malicious":  13
+                                                        }
+                                     },
+                       "subdomains_count":  0,
+                       "global_risk_score":  130
+                   }
+},
+
+{
+    "message":  " This domain has been flagged as malicious based on multiple detection reports and its association with potentially harmful activities.",
+    "indicator":  "http://www.amazonwebclone.vercel.app/",
+    "type":  "url",
+    "verdict":  {
+                    "threat_level":  "high",
+                    "score":  75,
+                    "tags":  [ "malicious-vt",
+                                 "google-sb"]
+                },
+    "ti_summary":  {
+                       "domain":  "www.amazonwebclone.vercel.app",
+                       "ip":  "216.198.79.3",
+                       "detection":  {
+                                         "virustotal":  {
+                                                            "malicious":  18,
+                                                            "suspicious":  1
+                                                        },
+                                         "google_safe_browsing":  {
+                                                                      "threats":  ["SOCIAL_ENGINEERING"]
+                                                                  },
+                                         "phishtank":  {
+                                                           "verdict":  "clean"
+                                                       }
+                                     },
+                       "global_risk_score":  100
+                   }
+},
+
+{
+    "message":  " This email exhibits several red flags indicative of phishing activity. The lack of proper authentication mechanisms such as SPF, DKIM, and DMARC raises concerns regarding its legitimacy.",
+    "indicator":  "security@paypal-update-info.com",
+    "type":  "mail",
+    "verdict":  {
+                    "threat_level":  "high",
+                    "score":  95,
+                    "tags":  [
+
+                             ]
+                },
+    "ti_summary":  {
+                       "domain":  "paypal-update-info.com",
+                       "security":  {
+                                        "mx":  "missing",
+                                        "spf":  "missing",
+                                        "dmarc":  "missing"
+                                    },
+                       "alerts":  [
+                                      "Aucun serveur MX",
+                                      "SPF absent",
+                                      "DMARC absent",
+                                      "Imite paypal"
+                                  ],
+                       "provider":  "Inconnu"
+                   }
+},
+
+{
+    "message":  " A vulnerability has been identified in Microsoft .NET Framework where improper input validation can lead to privilege escalation via a network connection. This issue affects all versions of .NET Framework affected by this component. Remediation steps involve patching vulnerable systems.",
+    "indicator":  "CVE-2026-40372",
+    "type":  "cve",
+    "verdict":  {
+                    "threat_level":  "critical",
+                    "score":  85,
+                    "tags":  [
+                                 "authentication bypass",
+                                 "privilege escalation",
+                                 "web application security"
+                             ]
+                },
+    "ti_summary":  {
+                       "severity":  "CRITICAL",
+                       "cvss_score":  9.1,
+                       "cvss_vector":  "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                       "cwe":  [
+                                   "CWE-347"
+                               ],
+                       "affected":  [
+
+                                    ],
+                       "published":  "2026-04-21"
+                   }
+}
+
+]
