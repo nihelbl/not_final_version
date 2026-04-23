@@ -47,7 +47,6 @@ def parse_ioc_blocks(txt_path: str) -> list[dict]:
             "threat_level":    extract("threat_level"),
             "score":           extract("score"),
             "rag_used":        extract("rag_used").lower() == "true",
-            "rag_skipped":     extract("rag_skipped").lower() == "true",
             "fallback":        extract("fallback").lower() == "true",
             "summary":         extract("summary"),
             "source_file":     txt_path,
@@ -126,7 +125,6 @@ def write_report(
 
     # Stats
     rag_used    = sum(1 for r in all_results if r["rag_used"])
-    rag_skipped = sum(1 for r in all_results if r["rag_skipped"])
     fallback    = sum(1 for r in all_results if r["fallback"])
     errors      = 0  # les erreurs sont exclues du parsing
 
@@ -152,7 +150,6 @@ def write_report(
     lines.append("")
     lines.append(f"  Total IOC analysés : {len(all_results)}")
     lines.append(f"  RAG activé         : {rag_used}/{len(all_results)}")
-    lines.append(f"  RAG skippé         : {rag_skipped}/{len(all_results)}")
     lines.append(f"  Fallback           : {fallback}/{len(all_results)}")
     lines.append(sep)
 

@@ -34,12 +34,11 @@ THREAT_LEVEL_TO_LABEL = {
 # APPEL API
 # ──────────────────────────────────────────────
 
-def call_api_force_rag(indicator: str, ioc_type: str, api_url: str) -> dict:
+def call_api(indicator: str, ioc_type: str, api_url: str) -> dict:
     try:
         resp = requests.post(
             f"{api_url}/ioc/analyze",
             json={"indicator": indicator},
-            params={"force_rag": "true"},
             timeout=REQUEST_TIMEOUT,
             headers={
                 "Content-Type":               "application/json",
@@ -68,9 +67,8 @@ def extract_prediction(api_response: dict):
     threat_level = llm.get("threat_level", "unknown")
     rag_used     = llm.get("rag_used", False)
     fallback     = llm.get("fallback", False)
-    rag_skipped  = llm.get("rag_skipped", False)
     predicted    = map_threat_level(threat_level)
-    return threat_level, predicted, rag_used, fallback, rag_skipped
+    return threat_level, predicted, rag_used, fallback
 
 
 # ──────────────────────────────────────────────
@@ -141,7 +139,6 @@ def save_ioc_result_txt(
     threat_level: str,
     rag_used: bool,
     fallback: bool,
-    rag_skipped: bool,
     api_response: dict,
 ):
     """Ajoute une ligne détaillée par IOC dans le fichier texte de résultats."""
@@ -160,7 +157,6 @@ def save_ioc_result_txt(
         f.write(f"  threat_level : {threat_level}\n")
         f.write(f"  score        : {score}\n")
         f.write(f"  rag_used     : {rag_used}\n")
-        f.write(f"  rag_skipped  : {rag_skipped}\n")
         f.write(f"  fallback     : {fallback}\n")
         f.write(f"  summary      : {summary[:120]}\n")
         f.write("\n")
@@ -196,7 +192,7 @@ def save_summary_txt(
         f.write(f"  Date         : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"  Total IOC    : {stats['total']}\n")
         f.write(f"  Succès       : {stats['success']}  |  Erreurs : {stats['errors']}\n")
-        f.write(f"  RAG activé   : {stats['rag_used']}  |  RAG skippé : {stats['rag_skipped']}\n")
+        f.write(f"  RAG activé   : {stats['rag_used']}\n")
         f.write(f"  Fallback     : {stats['fallback']}\n")
         f.write(f"{sep}\n\n")
 
@@ -257,7 +253,7 @@ def print_report(metrics: dict, metrics_by_type: dict, stats: dict):
     print(sep)
     print(f"  Total IOC  : {stats['total']}")
     print(f"  Succès     : {stats['success']}  |  Erreurs : {stats['errors']}")
-    print(f"  RAG activé : {stats['rag_used']}  |  RAG skippé : {stats['rag_skipped']}")
+    print(f"  RAG activé : {stats['rag_used']}")
     print(f"  Fallback   : {stats['fallback']}")
     print(sep)
     print(f"\n  MÉTRIQUES GLOBALES")
@@ -300,7 +296,7 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
     y_pred  = []
     stats   = {
         "total": 0, "success": 0, "errors": 0,
-        "rag_used": 0, "rag_skipped": 0, "fallback": 0
+        "rag_used": 0, "fallback": 0
     }
 
     for i, item in enumerate(dataset):
@@ -319,7 +315,7 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
             end="", flush=True
         )
 
-        api_response = call_api_force_rag(indicator, ioc_type, api_url)
+        api_response = call_api(indicator, ioc_type, api_url)
 
         if "error" in api_response and not api_response.get("llm_analysis"):
             print(f"→ ERREUR : {api_response['error']}")
@@ -339,7 +335,7 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
             continue
 
         # Extraction du verdict
-        threat_level, predicted_label, rag_used, fallback, rag_skipped = extract_prediction(api_response)
+        threat_level, predicted_label, rag_used, fallback = extract_prediction(api_response)
 
         y_true.append(true_label)
         y_pred.append(predicted_label)
@@ -352,7 +348,6 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
 
         stats["success"]     += 1
         stats["rag_used"]    += int(rag_used)
-        stats["rag_skipped"] += int(rag_skipped)
         stats["fallback"]    += int(fallback)
 
         result_entry = {
@@ -363,7 +358,6 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
             "predicted_label": predicted_label,
             "correct":         predicted_label == true_label,
             "rag_used":        rag_used,
-            "rag_skipped":     rag_skipped,
             "fallback":        fallback,
             "status":          "success",
         }
@@ -380,7 +374,6 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
             threat_level   = threat_level,
             rag_used       = rag_used,
             fallback       = fallback,
-            rag_skipped    = rag_skipped,
             api_response   = api_response,
         )
 
@@ -422,7 +415,6 @@ def evaluate(dataset_path: str, api_url: str, output_path: str, txt_path: str):
             "dataset":           dataset_path,
             "api_url":           api_url,
             "total_ioc":         stats["total"],
-            "force_rag_mode":    True,
             "threshold_mapping": THREAT_LEVEL_TO_LABEL,
         },
         "stats":           stats,

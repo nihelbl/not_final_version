@@ -402,25 +402,6 @@ def classify_indicator(raw: dict, indicator_type: str) -> Classification:
     return _non_clean_display_bucket(raw, indicator_type)
 
 
-def build_clean_response(raw: dict, ti_data: dict, ioc_type: str) -> dict:
-    gv = _verdict_for_type(raw, ioc_type)
-    parts = [f"Verdict TI : {gv}."]
-    if ioc_type == "domain" and raw.get("global_risk_score") is not None:
-        parts.append(f"Score de risque global : {raw.get('global_risk_score')}.")
-    if ioc_type == "ip":
-        parts.append("Sources : VirusTotal, AbuseIPDB, OTX — indicateur classé bénin par la TI.")
-    summary = " ".join(parts)
-    return {
-        "threat_level": "clean",
-        "score": 0,
-        "summary": summary,
-        "model_used": None,
-        "rag_used": False,
-        "fallback": False,
-        "sources_ti": ti_data.get("sources_ti"),
-    }
-
-
 def _apply_ip_suspicious_severity_cap(raw: dict, ioc_type: str, llm_result: dict) -> dict:
     """Verdict TI = suspicious : plafonner high/critical → medium (évite surestimation)."""
     if _lower(ioc_type) != "ip":
@@ -458,16 +439,13 @@ def _run_llm_with_rag(
     raw: dict,
     ti_norm: dict,
     final_verdict: str,
-) -> tuple[list, bool, str | None, str | None, dict]:
+) -> tuple[list, str | None, dict]:
     """
-    Triage non-CLEAN : toujours tenter RAG (rag_skipped=False côté API),
-    puis LLM — pas de gate « TI bénin » ici (évite rag_skip=True sur malicieux).
+    Triage IOC : toujours tenter RAG puis LLM.
     """
-    ti_signals = collect_ti_signals(ioc_type, raw)
     rag_docs: list = []
     rag_fetch_error: str | None = None
-    skip_rag = False
-    rag_gate_reason: str | None = None
+    ti_signals = collect_ti_signals(ioc_type, raw)
     print(f"[RAG] Triage LLM — signaux TI: {ti_signals}")
     try:
         rag_query = build_rag_query(ioc_type, raw, ti_norm)
@@ -535,7 +513,7 @@ def _run_llm_with_rag(
 
     llm_result = _apply_ip_suspicious_severity_cap(raw, ioc_type, llm_result)
 
-    return rag_docs, skip_rag, rag_gate_reason, rag_fetch_error, llm_result
+    return rag_docs, rag_fetch_error, llm_result
 
 
 def api_ti_section(ioc_type: str, raw: dict) -> dict:
@@ -606,7 +584,7 @@ def api_ti_section(ioc_type: str, raw: dict) -> dict:
     return {}
 
 
-def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) -> dict:
+def analyze_ioc(indicator: str, indicator_type: str) -> dict:
     """
     Collecte TI, classifie, retourne le corps JSON prêt pour /analyze
     (sans CVE — le routeur gère CVE à part).
@@ -658,28 +636,20 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
     ti_norm["sources_ti"] = sources_map.get(ioc_type, ["VirusTotal"])
 
     rag_docs: list = []
-    skip_rag = False
-    rag_gate_reason: str | None = None
     rag_fetch_error: str | None = None
 
-    if classification == "CLEAN" and not force_rag:
-        llm_result = build_clean_response(raw, ti_norm, ioc_type)
-        skip_rag = True
-        rag_gate_reason = "ti_clean_skip_llm"
-        rag_docs = []
-    else:
-        try:
-            rag_docs, skip_rag, rag_gate_reason, rag_fetch_error, llm_result = _run_llm_with_rag(
-                indicator, ioc_type, raw, ti_norm, str(final_verdict)
-            )
-        except Exception as e:
-            llm_result = {
-                "threat_level": "unknown",
-                "score": 0,
-                "summary": f"LLM indisponible : {str(e)}",
-                "tags": [],
-                "fallback": True,
-            }
+    try:
+        rag_docs, rag_fetch_error, llm_result = _run_llm_with_rag(
+            indicator, ioc_type, raw, ti_norm, str(final_verdict)
+        )
+    except Exception as e:
+        llm_result = {
+            "threat_level": "unknown",
+            "score": 0,
+            "summary": f"LLM indisponible : {str(e)}",
+            "tags": [],
+            "fallback": True,
+        }
     if ioc_type == "mail":
         mail_score = raw.get("score", 0)
         mail_verdict = _lower(raw.get("verdict", ""))
@@ -776,7 +746,7 @@ def analyze_ioc(indicator: str, indicator_type: str, force_rag: bool = False) ->
             "model": llm_result.get("model_used"),
             "rag_used": llm_result.get("rag_used", False),
             "fallback": llm_result.get("fallback", False),
-            "ti_only": classification == "CLEAN",
+            "rag_fetch_error": rag_fetch_error,
         },
 
     }

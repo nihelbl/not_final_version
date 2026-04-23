@@ -5,3 +5,5 @@ python-dotenv==1.0.0
 dnspython
 sqlalchemy
 chromadb
+pymysql
+sentence_transformers

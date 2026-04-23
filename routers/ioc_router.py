@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from services.cve_service import get_cve_report
 from services.llm_enricher import enrich_ioc, enrich_with_rag
-from services.rag_gate import should_disable_rag, build_rag_query, collect_ti_signals
+from services.rag_gate import build_rag_query
 from services.ioc_analysis import analyze_ioc
 from rag.rag_retriever import retrieve
 import re
@@ -51,7 +51,7 @@ def _normalize_ti_cve(raw: dict, indicator: str, ioc_type: str) -> dict:
 
 
 @router.post("/analyze")
-def analyze(body: IOCRequest, force_rag: bool = False):
+def analyze(body: IOCRequest):
     indicator = body.indicator.strip()
     if not indicator:
         return JSONResponse({'error': 'Indicateur manquant'}, status_code=400)
@@ -66,7 +66,7 @@ def analyze(body: IOCRequest, force_rag: bool = False):
 
     if ioc_type in ("ip", "domain", "hash", "url", "mail"):
         try:
-            payload = analyze_ioc(indicator, ioc_type, force_rag=force_rag)
+            payload = analyze_ioc(indicator, ioc_type)
         except Exception as e:
             return JSONResponse(
                 {"error": f"Erreur collecte TI : {str(e)}"},
@@ -97,28 +97,20 @@ def analyze(body: IOCRequest, force_rag: bool = False):
     ti_data = _normalize_ti_cve(raw, indicator, ioc_type)
     final_verdict = raw.get("final_verdict") or raw.get("global_risk_level", "unknown")
 
-    ti_signals = collect_ti_signals(ioc_type, raw)
     rag_docs: list = []
     rag_fetch_error: str | None = None
-    skip_rag, rag_gate_reason = should_disable_rag(ioc_type, raw, ti_signals)
-    if force_rag:
-        skip_rag = False 
-    
-    if skip_rag:
-        print(f"[RAG] Désactivé ({rag_gate_reason}) — signaux: {ti_signals}")
-    else:
-        try:
-            rag_query = build_rag_query(ioc_type, raw, ti_data)
-            rag_docs = retrieve(
-                query=rag_query,
-                k=5,
-                min_score=0.52,
-                ioc_type=ioc_type,
-            )
-        except Exception as e:
-            rag_docs = []
-            rag_fetch_error = str(e)
-            print(f"[RAG] Erreur : {e}")
+    try:
+        rag_query = build_rag_query(ioc_type, raw, ti_data)
+        rag_docs = retrieve(
+            query=rag_query,
+            k=5,
+            min_score=0.52,
+            ioc_type=ioc_type,
+        )
+    except Exception as e:
+        rag_docs = []
+        rag_fetch_error = str(e)
+        print(f"[RAG] Erreur : {e}")
 
 
     try:
@@ -181,8 +173,6 @@ def analyze(body: IOCRequest, force_rag: bool = False):
             "model": llm_result.get("model_used"),
             "rag_used": llm_result.get("rag_used", False),
             "fallback": llm_result.get("fallback", False),
-            "rag_skipped": skip_rag,
-            "rag_skip_reason": rag_gate_reason if skip_rag else None,
             "rag_fetch_error": rag_fetch_error,
         },
     }

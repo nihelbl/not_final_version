@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime
+import uuid
+
+from sqlalchemy import Column, Integer, String, JSON, DateTime, Text
 from sqlalchemy.sql import func
 from .db import Base
 
@@ -37,4 +39,14 @@ class IPReputation(Base):
     final_verdict = Column(String(50))
     country = Column(String(50))
     data = Column(JSON)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    session_id = Column(String(36), index=True, nullable=False)
+    role = Column(String(16), nullable=False)  # "user" or "assistant"
+    content = Column(Text, nullable=False)
     created_at = Column(DateTime, server_default=func.now())

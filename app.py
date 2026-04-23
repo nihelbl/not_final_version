@@ -9,6 +9,7 @@ from routers.ip_router import router as ip_router
 from routers.mail_router import router as mail_router
 from routers.cve_router import router as cve_router
 from routers.ioc_router import router as ioc_router
+from routers.chatbot_router import router as chatbot_router
 from routers.cve_router import router as cve_router
 from database.db import init_db 
 
@@ -31,14 +32,10 @@ app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(mail_router, prefix="/mail", tags=["Mail Reputation"])
 app.include_router(cve_router, prefix="/cve", tags=["CVE Lookup"])
 app.include_router(ioc_router, prefix="/ioc", tags=["IOC Analysis"])
+app.include_router(chatbot_router, prefix="/chatbot", tags=["Chatbot"])
 
 # Health check
 @app.get("/", tags=["Health"])
 def root():
     return {"status": "ok", "message": "Threat Intelligence Platform is running"}
 
-@app.get("/reindex")
-def reindex():
-    from rag.rag_indexer import index_all_sources
-    total = index_all_sources()
-    return {"status": "ok", "total": total}
